@@ -1,0 +1,36 @@
+yt-dlp
+requests
+python-dotenv
+isodate
+spacy
+transformers
+torch==2.6.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+git+https://github.com/openai/whisper.git
+
+# Core packages
+pandas
+sqlalchemy
+tqdm
+pathlib
+scikit-learn
+openpyxl
+
+# Kafka and streaming
+kafka-python
+pyspark
+pyarrow
+pyiceberg
+
+# PostgreSQL DB support
+psycopg2-binary
+
+# dbt for data modeling
+dbt-postgres
+
+# Streamlit dashboard
+streamlit
+
+# Model Training
+xgboost==2.0.3

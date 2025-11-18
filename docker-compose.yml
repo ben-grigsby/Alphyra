@@ -1,0 +1,29 @@
+services:
+  alphyra:
+    build: .
+    container_name: alphyra_app
+    env_file: .env
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    working_dir: /app
+    depends_on:
+      - postgres
+    command: tail -f /dev/null
+
+  postgres:
+    image: postgres:15
+    container_name: alphyra_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: alphyra
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  pgdata:
