@@ -1,1 +1,1 @@
-SELECT * FROM raw.videos
+SELECT * FROM raw.news WHERE symbol = 'AAPL'

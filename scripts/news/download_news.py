@@ -19,18 +19,15 @@ def finnhub_news(symbol, from_date, to_date):
 
 
 
-def get_peers(symbol, grouping=None):
-    url = f"https://finnhub.io/api/v1/stock/peers?symbol={symbol}&token={FINNHUB_API}"
-
-    if grouping:
-        url += f"&grouping={grouping}"
-    
-    response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Failed to retrieve peers for {symbol}")
+def get_peers(symbol):
+    try:
+        url = f"https://finnhub.io/api/v1/stock/peers?symbol={symbol}&token={FINNHUB_API}"
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"[ERROR] Failed to get peers for {symbol}: {e}")
         return []
-    
-    return response.json()
 
 
 

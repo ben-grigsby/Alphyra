@@ -24,3 +24,6 @@
     - Solution
         - Find the quarterly shares outstanding from SEC filings or something and then determine the market cap by multiplying shares outstanding with closing_price 
 
+
+- YouTube API limit
+    - Capture widest scope of videos by setting a high maxresult value and a wide range of dates that still gives accuracy without losing it.

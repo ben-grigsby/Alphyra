@@ -106,86 +106,57 @@ def insert_to_db(symbol, from_date, to_date):
         news_df = transform_news(entry, symbol, company_name, sector)
         news_df.to_sql('news', engine, schema='raw', if_exists='append', index=False)
     
-    print(f"Inserted {len(raw_news)} rows for {symbol} from {from_date} to {to_date}")
+    print(f"[INFO] Inserted {len(raw_news)} rows for {symbol} from {from_date} to {to_date}")
 
     return True
 
 
 
-def retrieve_chain_symbols(base_symbol, from_date, to_date, n):
-    """
-    Recursively retrieve and insert news data for a base stock symbol and its peers.
-
-    Limits insertion to 10 unique symbols to avoid excessive API usage or DB overload.
-
-    Parameters:
-        base_symbol (str): The starting stock symbol (e.g., 'AAPL').
-        from_date (str): Start date in 'YYYY-MM-DD' format.
-        to_date (str): End date in 'YYYY-MM-DD' format.
-
-    Returns:
-        None
-    """
-    visited = set()        # all symbols we attempted
-    successful = set()     # symbols with actual news
+def stock_researcher(top_stocks, from_date, to_date, n):
     queue = deque()
-
-    initial_peers = get_peers(base_symbol)
-    queue.extend(initial_peers)
-    queue.append(base_symbol)
-
-    while queue and len(successful) < n:
-        symbol = queue.popleft()
-        
-        if symbol in visited:
-            continue
-
-        visited.add(symbol)
-        print(f"[INFO] Checking {symbol}")
-
-        # Try inserting
-        news_exists = insert_to_db(symbol, from_date, to_date)
-
-        if news_exists:
-            successful.add(symbol)
-
-            # Only expand network **if symbol had news**
-            new_peers = get_peers(symbol)
-            for peer in new_peers:
-                if peer not in visited:
-                    queue.append(peer)
-
-            print(f"[INFO] Added {symbol} to successful list ({len(successful)})")
-        else:
-            print(f"[INFO] No news for {symbol}, ignoring.")
-
-    return successful
-
-
-
-def master_symbol_safety(from_date, to_date, n, symbol=None):
     visited = set()
+    total = 0
 
-    if symbol:
-        visited.update(retrieve_chain_symbols(symbol, from_date, to_date, n))
-    else:
-        random_init = random.choice(list(tech_master_symbol_set))
-        visited.update(retrieve_chain_symbols(random_init, from_date, to_date, n))
+    for stock in top_stocks:
+        print(f"[INFO] Researching {stock}")
 
-    while len(visited) < n:
-        remaining_symbols = tech_master_symbol_set - visited
-        if not remaining_symbols:
-            print("[INFO] Exhausted master symbol list.")
-            break
+        visited.add(stock)
 
-        random_symbol = random.choice(list(remaining_symbols))
-        new_visited = retrieve_chain_symbols(random_symbol, from_date, to_date, n)
-        visited.update(new_visited)
+        if insert_to_db(stock, from_date, to_date):
+            total += 1
+            print(f"[INFO] Completed {stock} research")
+            print(f"[INFO] Researched {total} stocks in total")
+        else:
+            print(f"[INFO] No news for {stock}")
 
-    print(f"[INFO] Collected news for {len(visited)} unique symbols.")
-    return visited
-        
+        stock_peers = get_peers(stock)
+        for peer in stock_peers:
+            if peer not in visited and peer not in queue and peer not in top_stocks:
+                queue.append(peer)
+
+    print("\n")
+    print(f"[INFO] Starting research of peer stocks...")
+    print("\n")
+
+    while queue and len(visited) < n:
+        curr_stock = queue.popleft()
+        print(f"[INFO] Researching {curr_stock}")
+
+        if insert_to_db(curr_stock, from_date, to_date):
+            visited.add(curr_stock)
+            total += 1
+            print(f"[INFO] Completed {curr_stock} research")
+            print(f"[INFO] Researched {total} stocks in total")
+        else:
+            print(f"[INFO] No news for {curr_stock}")
+
+        stock_peers = get_peers(curr_stock)
+        for peer in stock_peers:
+            if peer not in visited and peer not in queue:
+                queue.append(peer)
+
+    print(f"[INFO] Completed research for a total of {total} stocks")
 
 
 if __name__ == '__main__':
-    master_symbol_safety("2025-11-10", "2025-11-14", 100, 'NVDA')
+    stock_researcher(tech_master_symbol_set, '2025-11-10', '2025-11-14', 100)
