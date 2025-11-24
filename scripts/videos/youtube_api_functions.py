@@ -125,5 +125,5 @@ def download_youtube_vid_mp3(url, filename, output_path='downloads'):
 
     print(f"Successfully downloaded {filename}")
 
-
+    return full_output_path
 

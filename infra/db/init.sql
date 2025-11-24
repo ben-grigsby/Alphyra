@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS raw.news(
 CREATE TABLE IF NOT EXISTS raw.videos (
     id SERIAL PRIMARY KEY,
     symbol VARCHAR(10) NOT NULL,
-    video_id VARCHAR(100) UNIQUE NOT NULL,
+    video_id VARCHAR(100) NOT NULL,
     title TEXT,
     url TEXT,
     transcript_path TEXT,

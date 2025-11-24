@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import pandas as pd
+import os
 
 def find_time_range(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
@@ -12,9 +13,22 @@ def find_time_range(date):
 
 
 
-def get_week_range(date_str):
-    date = datetime.strptime(date_str, "%Y-%m-%d")
-    monday = date - timedelta(days=date.weekday())
+def get_week_range(date_obj):
+    # date_obj is already a datetime.date
+    monday = date_obj - timedelta(days=date_obj.weekday())
     friday = monday + timedelta(days=4)
+    return monday, friday
 
-    return monday.date(), friday.date()
+
+
+def save_processed_id(video_id, path="data/processed_videos.txt"):
+    with open(path, "a") as f:
+        f.write(f"{video_id}\n")
+
+
+
+def load_processed_ids(path="data/processed_videos.txt"):
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            return set(line.strip() for line in f)
+    return set()

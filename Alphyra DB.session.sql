@@ -1,1 +1,1 @@
-SELECT * FROM raw.news WHERE symbol = 'AAPL'
+SELECT * FROM raw.sentiment

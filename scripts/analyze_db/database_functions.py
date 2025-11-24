@@ -8,7 +8,7 @@ load_dotenv()
 
 
 
-def get_news_db(query):
+def get_db_info(query):
     """
     Retrieve all news articles from the raw.news table in the PostgreSQL database.
 
@@ -26,6 +26,31 @@ def get_news_db(query):
 
 
 
+def insert_sentiment_into_db(df):
+    postgres_url = os.getenv("POSTGRES_URL")
+    engine = create_engine(postgres_url)
+
+    try:
+        df.to_sql('sentiment', engine, schema='raw', if_exists='append', index=False)
+        return True, None
+    except Exception as e:
+        return False, e
+
+
+
+def insert_historic_into_db(df):
+    postgres_url = os.getenv("POSTGRES_URL")
+    engine = create_engine(postgres_url)
+
+    try:
+        df.to_sql('stock_prices', engine, schema='raw', if_exists='append', index=False)
+        return True, None
+    except Exception as e:
+        return False, e
+    
+
+
 if __name__ == "__main__":
-    symbol_list = get_news_db("SELECT * FROM raw.news")
+    query = "SELECT * FROM raw.news"
+    symbol_list = get_db_info(query)
     print(symbol_list[:5])
