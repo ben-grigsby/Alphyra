@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: company_financials
+      - name: news
+      - name: videos
+      - name: sentiment
+      - name: stock_prices

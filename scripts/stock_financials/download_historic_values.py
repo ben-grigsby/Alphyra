@@ -93,6 +93,6 @@ def get_historic_data(query, start, end, timeframe):
 
 # print(response.json())
 
-query = "SELECT DISTINCT symbol FROM raw.news"
-
-get_historic_data(query, "2025-11-17", "2025-11-21", "1Day")
+if __name__ == '__main__':
+    query = "SELECT DISTINCT symbol FROM raw.news"
+    get_historic_data(query, "2025-11-17", "2025-11-21", "1Day")

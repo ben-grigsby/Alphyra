@@ -1,0 +1,38 @@
+name: 'alphyra'
+version: '1.0.0'
+config-version: 2
+
+profile: 'alphyra'
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  alphyra:
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ['staging']
+
+    intermediate:
+      +schema: intermediate
+      +materialized: ephemeral
+      +tags: ['intermediate']
+
+    marts:
+      +schema: mart
+      +materialized: table
+      +tags: ['mart']
+
+    iceberg:
+      +schema: iceberg_silver
+      +materialized: table
+      +tags: ['iceberg']

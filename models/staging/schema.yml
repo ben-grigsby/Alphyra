@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_company_financials
+    description: "Cleaned financial metrics from Finnhub + SEC filings."
+    columns:
+      - name: symbol
+        description: "Ticker symbol"
+      - name: metric_name
+        description: "Metric name from Finnhub or SEC"
+      - name: metric_value
+        description: "Numeric value"
+      - name: metric_period
+        description: "Annual, TTM, YoY, etc."
+      - name: source
+        description: "finnhub or SEC 10-K"

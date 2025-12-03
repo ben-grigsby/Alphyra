@@ -34,3 +34,6 @@ streamlit
 
 # Model Training
 xgboost==2.0.3
+
+# Scraping
+beautifulsoup4

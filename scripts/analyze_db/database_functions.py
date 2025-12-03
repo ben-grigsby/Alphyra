@@ -47,7 +47,19 @@ def insert_historic_into_db(df):
         return True, None
     except Exception as e:
         return False, e
-    
+
+
+
+def insert_financials_into_db(df):
+    postgres_url = os.getenv("POSTGRES_URL")
+    engine = create_engine(postgres_url)
+
+    try:
+        df.to_sql('company_financials', engine, schema='raw', if_exists='append', index=False)
+        return True, None
+    except Exception as e:
+        return False, e
+
 
 
 if __name__ == "__main__":

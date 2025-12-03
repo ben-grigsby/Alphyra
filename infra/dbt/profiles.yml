@@ -1,0 +1,12 @@
+alphyra:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres              # name of your Postgres container
+      user: user
+      password: pass
+      port: 5432                  # internal container port (NOT 5433)
+      dbname: alphyra
+      schema: staging             # default schema
+      threads: 4

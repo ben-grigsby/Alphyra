@@ -1,0 +1,609 @@
+[0m07:22:15.928608 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff9579c9a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff9465c580>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff9465c430>]}
+
+
+============================== 07:22:15.932564 | fc107846-b962-4dc3-83f2-b2b9822b25f8 ==============================
+[0m07:22:15.932564 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:22:15.932921 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'profiles_dir': 'infra/dbt', 'static_parser': 'True', 'write_json': 'True', 'log_cache_events': 'False', 'use_colors': 'True', 'empty': 'False', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'use_experimental_parser': 'False', 'indirect_selection': 'eager', 'fail_fast': 'False', 'log_format': 'default', 'log_path': 'logs', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'invocation_command': 'dbt run --profiles-dir infra/dbt --select stg_company_financials', 'debug': 'False', 'partial_parse': 'True', 'warn_error': 'None', 'target_path': 'None', 'no_print': 'None', 'version_check': 'True', 'cache_selected_only': 'False', 'quiet': 'False'}
+[0m07:22:15.933278 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /app/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m07:22:15.934265 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.02774875, "process_in_blocks": "352", "process_kernel_time": 0.026026, "process_mem_max_rss": "96504", "process_out_blocks": "3", "process_user_time": 0.688706}
+[0m07:22:15.934501 [debug] [MainThread]: Command `dbt run` failed at 07:22:15.934460 after 0.03 seconds
+[0m07:22:15.934685 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff9579c9a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff946ae710>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff946ae770>]}
+[0m07:22:15.934886 [debug] [MainThread]: Flushing usage events
+[0m07:22:16.837582 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:23:00.441915 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff969b49d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff958745e0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff95874580>]}
+
+
+============================== 07:23:00.444197 | 493a0f51-49ca-4823-b61d-f2dcf0d6622e ==============================
+[0m07:23:00.444197 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:23:00.444579 [debug] [MainThread]: running dbt with arguments {'log_path': 'logs', 'printer_width': '80', 'log_format': 'default', 'fail_fast': 'False', 'static_parser': 'True', 'invocation_command': 'dbt run --profiles-dir infra/dbt/models/staging --select stg_company_financials', 'profiles_dir': 'infra/dbt/models/staging', 'version_check': 'True', 'use_colors': 'True', 'cache_selected_only': 'False', 'quiet': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'warn_error': 'None', 'write_json': 'True', 'empty': 'False', 'use_experimental_parser': 'False', 'debug': 'False', 'log_cache_events': 'False', 'no_print': 'None', 'partial_parse': 'True', 'target_path': 'None', 'send_anonymous_usage_stats': 'True', 'indirect_selection': 'eager', 'introspect': 'True'}
+[0m07:23:00.444940 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /app/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m07:23:00.445473 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.02497725, "process_in_blocks": "0", "process_kernel_time": 0.029003, "process_mem_max_rss": "96556", "process_out_blocks": "3", "process_user_time": 0.688072}
+[0m07:23:00.445708 [debug] [MainThread]: Command `dbt run` failed at 07:23:00.445668 after 0.03 seconds
+[0m07:23:00.445906 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff969b49d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff958c6740>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff958c67a0>]}
+[0m07:23:00.446093 [debug] [MainThread]: Flushing usage events
+[0m07:23:01.298827 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:25:20.744709 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff87478a30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff862686a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff86268640>]}
+
+
+============================== 07:25:20.747074 | a4842b13-01cd-450e-8b48-23bbd069d28d ==============================
+[0m07:25:20.747074 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:25:20.747422 [debug] [MainThread]: running dbt with arguments {'debug': 'False', 'log_path': 'logs', 'no_print': 'None', 'use_colors': 'True', 'empty': 'False', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'target_path': 'None', 'indirect_selection': 'eager', 'send_anonymous_usage_stats': 'True', 'profiles_dir': 'infra/dbt/models/staging', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'use_experimental_parser': 'False', 'static_parser': 'True', 'introspect': 'True', 'warn_error': 'None', 'invocation_command': 'dbt run --profiles-dir infra/dbt/models/staging --select stg_company_financials', 'fail_fast': 'False', 'write_json': 'True', 'printer_width': '80', 'quiet': 'False', 'log_format': 'default', 'version_check': 'True'}
+[0m07:25:20.747783 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /app/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m07:25:20.748285 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.025105791, "process_in_blocks": "0", "process_kernel_time": 0.029968, "process_mem_max_rss": "95760", "process_out_blocks": "3", "process_user_time": 0.693281}
+[0m07:25:20.748537 [debug] [MainThread]: Command `dbt run` failed at 07:25:20.748490 after 0.03 seconds
+[0m07:25:20.748747 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff87478a30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8622d720>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8622fd60>]}
+[0m07:25:20.748948 [debug] [MainThread]: Flushing usage events
+[0m07:25:21.617780 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:26:01.341292 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa39b4a60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa2878220>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa28780a0>]}
+
+
+============================== 07:26:01.343590 | 3c617105-a0fd-4500-96ed-d9157cee6cf4 ==============================
+[0m07:26:01.343590 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:26:01.343999 [debug] [MainThread]: running dbt with arguments {'indirect_selection': 'eager', 'no_print': 'None', 'static_parser': 'True', 'introspect': 'True', 'version_check': 'True', 'profiles_dir': 'infra/dbt', 'partial_parse': 'True', 'use_colors': 'True', 'quiet': 'False', 'use_experimental_parser': 'False', 'empty': 'False', 'log_path': 'logs', 'send_anonymous_usage_stats': 'True', 'printer_width': '80', 'target_path': 'None', 'fail_fast': 'False', 'debug': 'False', 'invocation_command': 'dbt run --profiles-dir infra/dbt --select stg_company_financials', 'write_json': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'warn_error': 'None', 'log_cache_events': 'False', 'cache_selected_only': 'False', 'log_format': 'default'}
+[0m07:26:01.344342 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /app/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m07:26:01.344797 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.025689833, "process_in_blocks": "0", "process_kernel_time": 0.026091, "process_mem_max_rss": "96524", "process_out_blocks": "3", "process_user_time": 0.686397}
+[0m07:26:01.345055 [debug] [MainThread]: Command `dbt run` failed at 07:26:01.345015 after 0.03 seconds
+[0m07:26:01.345245 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa39b4a60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa28256f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa2827d30>]}
+[0m07:26:01.345446 [debug] [MainThread]: Flushing usage events
+[0m07:26:02.174724 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:26:29.711095 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffae898a30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffad65c280>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffad65c220>]}
+
+
+============================== 07:26:29.713528 | 818b4a66-ace5-454e-8378-d00bd992a3ed ==============================
+[0m07:26:29.713528 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:26:29.713888 [debug] [MainThread]: running dbt with arguments {'write_json': 'True', 'partial_parse': 'True', 'static_parser': 'True', 'cache_selected_only': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'version_check': 'True', 'profiles_dir': '/app/infra/dbt', 'invocation_command': 'dbt run --profiles-dir /app/infra/dbt --select stg_company_financials', 'log_cache_events': 'False', 'no_print': 'None', 'warn_error': 'None', 'quiet': 'False', 'fail_fast': 'False', 'use_experimental_parser': 'False', 'indirect_selection': 'eager', 'target_path': 'None', 'use_colors': 'True', 'printer_width': '80', 'debug': 'False', 'log_format': 'default', 'log_path': 'logs', 'introspect': 'True', 'send_anonymous_usage_stats': 'True', 'empty': 'False'}
+[0m07:26:29.714233 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /app/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m07:26:29.714765 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.025090959, "process_in_blocks": "0", "process_kernel_time": 0.029985, "process_mem_max_rss": "95732", "process_out_blocks": "3", "process_user_time": 0.682662}
+[0m07:26:29.714991 [debug] [MainThread]: Command `dbt run` failed at 07:26:29.714952 after 0.03 seconds
+[0m07:26:29.715225 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffae898a30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffad625720>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffad627d60>]}
+[0m07:26:29.715438 [debug] [MainThread]: Flushing usage events
+[0m07:26:30.566503 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:28:27.338047 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaafb4a60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa9e7c1f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa9e7c190>]}
+
+
+============================== 07:28:27.340321 | 64aa4bbf-966c-4d61-99d8-b5bba03e78c4 ==============================
+[0m07:28:27.340321 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:28:27.340671 [debug] [MainThread]: running dbt with arguments {'debug': 'False', 'target_path': 'None', 'warn_error': 'None', 'write_json': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'profiles_dir': '/app/infra/dbt', 'send_anonymous_usage_stats': 'True', 'invocation_command': 'dbt run --profiles-dir /app/infra/dbt --select stg_company_financials', 'static_parser': 'True', 'empty': 'False', 'use_colors': 'True', 'log_format': 'default', 'no_print': 'None', 'indirect_selection': 'eager', 'quiet': 'False', 'introspect': 'True', 'partial_parse': 'True', 'version_check': 'True', 'log_cache_events': 'False', 'printer_width': '80', 'fail_fast': 'False', 'cache_selected_only': 'False', 'use_experimental_parser': 'False', 'log_path': '/app/logs'}
+[0m07:28:27.422878 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '64aa4bbf-966c-4d61-99d8-b5bba03e78c4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa9e7f8e0>]}
+[0m07:28:27.445779 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '64aa4bbf-966c-4d61-99d8-b5bba03e78c4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa9e717b0>]}
+[0m07:28:27.446193 [info ] [MainThread]: Registered adapter: postgres=1.9.1
+[0m07:28:27.475050 [debug] [MainThread]: checksum: 14a228079bd6df63ba81633f9a3cf44ecfaa31056ac397c602753ec895dbf885, vars: {}, profile: , target: , version: 1.10.15
+[0m07:28:27.475531 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m07:28:27.475762 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '64aa4bbf-966c-4d61-99d8-b5bba03e78c4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa8e42410>]}
+[0m07:28:27.780127 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 4 unused configuration paths:
+- models.alphyra.marts
+- models.alphyra.iceberg
+- models.alphyra.intermediate
+- models.alphyra.staging
+[0m07:28:27.782470 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '64aa4bbf-966c-4d61-99d8-b5bba03e78c4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaa0a9c90>]}
+[0m07:28:27.804044 [debug] [MainThread]: Wrote artifact WritableManifest to /app/target/manifest.json
+[0m07:28:27.805690 [debug] [MainThread]: Wrote artifact SemanticManifest to /app/target/semantic_manifest.json
+[0m07:28:27.817495 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '64aa4bbf-966c-4d61-99d8-b5bba03e78c4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa8b0baf0>]}
+[0m07:28:27.817794 [info ] [MainThread]: Found 459 macros
+[0m07:28:27.818027 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '64aa4bbf-966c-4d61-99d8-b5bba03e78c4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa8b0ab90>]}
+[0m07:28:27.818352 [warn ] [MainThread]: The selection criterion 'stg_company_financials' does not match any enabled nodes
+[0m07:28:27.818863 [warn ] [MainThread]: Nothing to do. Try checking your model configs and model specification args
+[0m07:28:27.819188 [debug] [MainThread]: Command end result
+[0m07:28:27.830135 [debug] [MainThread]: Wrote artifact WritableManifest to /app/target/manifest.json
+[0m07:28:27.831029 [debug] [MainThread]: Wrote artifact SemanticManifest to /app/target/semantic_manifest.json
+[0m07:28:27.832819 [debug] [MainThread]: Wrote artifact RunExecutionResult to /app/target/run_results.json
+[0m07:28:27.833263 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": true, "command_wall_clock_time": 0.5173346, "process_in_blocks": "5192", "process_kernel_time": 0.056067, "process_mem_max_rss": "107328", "process_out_blocks": "2578", "process_user_time": 1.119345}
+[0m07:28:27.833498 [debug] [MainThread]: Command `dbt run` succeeded at 07:28:27.833458 after 0.52 seconds
+[0m07:28:27.833701 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaafb4a60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaae5a470>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffa9e7f8e0>]}
+[0m07:28:27.833896 [debug] [MainThread]: Flushing usage events
+[0m07:28:28.674283 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:31:42.456466 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb38b4970>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb277c1c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb277c160>]}
+
+
+============================== 07:31:42.458750 | 10b5006f-ccbb-4b11-ba30-d29d218dcace ==============================
+[0m07:31:42.458750 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:31:42.459102 [debug] [MainThread]: running dbt with arguments {'log_cache_events': 'False', 'use_colors': 'True', 'fail_fast': 'False', 'invocation_command': 'dbt run --profiles-dir /app/infra/dbt --select stg_company_financials', 'target_path': 'None', 'cache_selected_only': 'False', 'write_json': 'True', 'version_check': 'True', 'introspect': 'True', 'profiles_dir': '/app/infra/dbt', 'indirect_selection': 'eager', 'empty': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'log_format': 'default', 'use_experimental_parser': 'False', 'no_print': 'None', 'static_parser': 'True', 'printer_width': '80', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'log_path': '/app/logs', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'debug': 'False'}
+[0m07:31:42.522605 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '10b5006f-ccbb-4b11-ba30-d29d218dcace', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb27c6740>]}
+[0m07:31:42.545785 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '10b5006f-ccbb-4b11-ba30-d29d218dcace', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb27c6920>]}
+[0m07:31:42.546135 [info ] [MainThread]: Registered adapter: postgres=1.9.1
+[0m07:31:42.572906 [debug] [MainThread]: checksum: 14a228079bd6df63ba81633f9a3cf44ecfaa31056ac397c602753ec895dbf885, vars: {}, profile: , target: , version: 1.10.15
+[0m07:31:42.603589 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 6 files added, 0 files changed.
+[0m07:31:42.603912 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_news.sql
+[0m07:31:42.604086 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_stock_prices.sql
+[0m07:31:42.604318 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_company_financials.sql
+[0m07:31:42.604547 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_videos.sql
+[0m07:31:42.604790 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/schema.yml
+[0m07:31:42.604997 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_sentiment.sql
+[0m07:31:42.739433 [error] [MainThread]: Encountered an error:
+Compilation Error
+  Model 'model.alphyra.stg_company_financials' (models/staging/stg_company_financials.sql) depends on a source named 'raw.company_financials' which was not found
+[0m07:31:42.740111 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.30605683, "process_in_blocks": "544", "process_kernel_time": 0.040152, "process_mem_max_rss": "109156", "process_out_blocks": "6", "process_user_time": 0.937566}
+[0m07:31:42.740373 [debug] [MainThread]: Command `dbt run` failed at 07:31:42.740329 after 0.31 seconds
+[0m07:31:42.740593 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb38b4970>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb1330040>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb13dad10>]}
+[0m07:31:42.740825 [debug] [MainThread]: Flushing usage events
+[0m07:31:43.704220 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:33:16.810232 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb9b84a60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb8a7c1f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb8a7c190>]}
+
+
+============================== 07:33:16.812522 | 8323dbb0-baed-453c-b095-7cd04181df44 ==============================
+[0m07:33:16.812522 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:33:16.812876 [debug] [MainThread]: running dbt with arguments {'fail_fast': 'False', 'profiles_dir': '/app/infra/dbt', 'quiet': 'False', 'use_colors': 'True', 'no_print': 'None', 'static_parser': 'True', 'debug': 'False', 'log_format': 'default', 'warn_error': 'None', 'printer_width': '80', 'introspect': 'True', 'partial_parse': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_path': '/app/logs', 'target_path': 'None', 'indirect_selection': 'eager', 'invocation_command': 'dbt run --profiles-dir /app/infra/dbt --select stg_company_financials', 'use_experimental_parser': 'False', 'log_cache_events': 'False', 'cache_selected_only': 'False', 'write_json': 'True', 'empty': 'False', 'send_anonymous_usage_stats': 'True', 'version_check': 'True'}
+[0m07:33:16.875967 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb8ac6740>]}
+[0m07:33:16.898866 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb8a6d7b0>]}
+[0m07:33:16.899229 [info ] [MainThread]: Registered adapter: postgres=1.9.1
+[0m07:33:16.924671 [debug] [MainThread]: checksum: 14a228079bd6df63ba81633f9a3cf44ecfaa31056ac397c602753ec895dbf885, vars: {}, profile: , target: , version: 1.10.15
+[0m07:33:16.952727 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 7 files added, 0 files changed.
+[0m07:33:16.953101 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_stock_prices.sql
+[0m07:33:16.953328 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_videos.sql
+[0m07:33:16.953529 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_news.sql
+[0m07:33:16.953758 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_sentiment.sql
+[0m07:33:16.953982 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/stg_company_financials.sql
+[0m07:33:16.954198 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/schema.yml
+[0m07:33:16.954409 [debug] [MainThread]: Partial parsing: added file: alphyra://models/staging/source.yml
+[0m07:33:17.149686 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.alphyra.iceberg
+- models.alphyra.marts
+- models.alphyra.intermediate
+[0m07:33:17.154333 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb7149b10>]}
+[0m07:33:17.192955 [debug] [MainThread]: Wrote artifact WritableManifest to /app/target/manifest.json
+[0m07:33:17.193953 [debug] [MainThread]: Wrote artifact SemanticManifest to /app/target/semantic_manifest.json
+[0m07:33:17.201646 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb71b4a30>]}
+[0m07:33:17.201930 [info ] [MainThread]: Found 5 models, 5 sources, 459 macros
+[0m07:33:17.202186 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb71b4970>]}
+[0m07:33:17.202973 [info ] [MainThread]: 
+[0m07:33:17.203221 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m07:33:17.203493 [info ] [MainThread]: 
+[0m07:33:17.203879 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m07:33:17.204400 [debug] [ThreadPool]: Acquiring new postgres connection 'list_alphyra'
+[0m07:33:17.227770 [debug] [ThreadPool]: Using postgres connection "list_alphyra"
+[0m07:33:17.228053 [debug] [ThreadPool]: On list_alphyra: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "list_alphyra"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m07:33:17.228196 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m07:33:17.232505 [debug] [ThreadPool]: SQL status: SELECT 7 in 0.004 seconds
+[0m07:33:17.233135 [debug] [ThreadPool]: On list_alphyra: Close
+[0m07:33:17.233492 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_alphyra, now create_alphyra_staging_staging)
+[0m07:33:17.233724 [debug] [ThreadPool]: Creating schema "database: "alphyra"
+schema: "staging_staging"
+"
+[0m07:33:17.236384 [debug] [ThreadPool]: Using postgres connection "create_alphyra_staging_staging"
+[0m07:33:17.236552 [debug] [ThreadPool]: On create_alphyra_staging_staging: BEGIN
+[0m07:33:17.236675 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m07:33:17.239586 [debug] [ThreadPool]: SQL status: BEGIN in 0.003 seconds
+[0m07:33:17.239789 [debug] [ThreadPool]: Using postgres connection "create_alphyra_staging_staging"
+[0m07:33:17.239984 [debug] [ThreadPool]: On create_alphyra_staging_staging: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "create_alphyra_staging_staging"} */
+create schema if not exists "staging_staging"
+[0m07:33:17.241290 [debug] [ThreadPool]: SQL status: CREATE SCHEMA in 0.001 seconds
+[0m07:33:17.241744 [debug] [ThreadPool]: On create_alphyra_staging_staging: COMMIT
+[0m07:33:17.241930 [debug] [ThreadPool]: Using postgres connection "create_alphyra_staging_staging"
+[0m07:33:17.242139 [debug] [ThreadPool]: On create_alphyra_staging_staging: COMMIT
+[0m07:33:17.242562 [debug] [ThreadPool]: SQL status: COMMIT in 0.000 seconds
+[0m07:33:17.242731 [debug] [ThreadPool]: On create_alphyra_staging_staging: Close
+[0m07:33:17.244892 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly create_alphyra_staging_staging, now list_alphyra_staging_staging)
+[0m07:33:17.247320 [debug] [ThreadPool]: Using postgres connection "list_alphyra_staging_staging"
+[0m07:33:17.247483 [debug] [ThreadPool]: On list_alphyra_staging_staging: BEGIN
+[0m07:33:17.247605 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m07:33:17.250330 [debug] [ThreadPool]: SQL status: BEGIN in 0.003 seconds
+[0m07:33:17.250510 [debug] [ThreadPool]: Using postgres connection "list_alphyra_staging_staging"
+[0m07:33:17.250654 [debug] [ThreadPool]: On list_alphyra_staging_staging: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "list_alphyra_staging_staging"} */
+select
+      'alphyra' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'staging_staging'
+    union all
+    select
+      'alphyra' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'staging_staging'
+    union all
+    select
+      'alphyra' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'staging_staging'
+  
+[0m07:33:17.252767 [debug] [ThreadPool]: SQL status: SELECT 0 in 0.002 seconds
+[0m07:33:17.253264 [debug] [ThreadPool]: On list_alphyra_staging_staging: ROLLBACK
+[0m07:33:17.253465 [debug] [ThreadPool]: On list_alphyra_staging_staging: Close
+[0m07:33:17.255380 [debug] [MainThread]: Using postgres connection "master"
+[0m07:33:17.255587 [debug] [MainThread]: On master: BEGIN
+[0m07:33:17.255746 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m07:33:17.258499 [debug] [MainThread]: SQL status: BEGIN in 0.003 seconds
+[0m07:33:17.258679 [debug] [MainThread]: Using postgres connection "master"
+[0m07:33:17.258880 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "master"} */
+select distinct
+        dependent_namespace.nspname as dependent_schema,
+        dependent_class.relname as dependent_name,
+        referenced_namespace.nspname as referenced_schema,
+        referenced_class.relname as referenced_name
+
+    -- Query for views: views are entries in pg_class with an entry in pg_rewrite, but we avoid
+    -- a seq scan on pg_rewrite by leveraging the fact there is an "internal" row in pg_depend for
+    -- the view...
+    from pg_class as dependent_class
+    join pg_namespace as dependent_namespace on dependent_namespace.oid = dependent_class.relnamespace
+    join pg_depend as dependent_depend on dependent_depend.refobjid = dependent_class.oid
+        and dependent_depend.classid = 'pg_rewrite'::regclass
+        and dependent_depend.refclassid = 'pg_class'::regclass
+        and dependent_depend.deptype = 'i'
+
+    -- ... and via pg_depend (that has a row per column, hence the need for "distinct" above, and
+    -- making sure to exclude the internal row to avoid a view appearing to depend on itself)...
+    join pg_depend as joining_depend on joining_depend.objid = dependent_depend.objid
+        and joining_depend.classid = 'pg_rewrite'::regclass
+        and joining_depend.refclassid = 'pg_class'::regclass
+        and joining_depend.refobjid != dependent_depend.refobjid
+
+    -- ... we can find the tables they query from in pg_class, but excluding system tables. Note we
+    -- don't need need to exclude _dependent_ system tables, because they only query from other
+    -- system tables, and so are automatically excluded by excluding _referenced_ system tables
+    join pg_class as referenced_class on referenced_class.oid = joining_depend.refobjid
+    join pg_namespace as referenced_namespace on referenced_namespace.oid = referenced_class.relnamespace
+        and referenced_namespace.nspname != 'information_schema'
+        and referenced_namespace.nspname not like 'pg\_%'
+
+    order by
+        dependent_schema, dependent_name, referenced_schema, referenced_name;
+[0m07:33:17.260171 [debug] [MainThread]: SQL status: SELECT 0 in 0.001 seconds
+[0m07:33:17.260631 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb7179d20>]}
+[0m07:33:17.260864 [debug] [MainThread]: On master: ROLLBACK
+[0m07:33:17.261089 [debug] [MainThread]: Using postgres connection "master"
+[0m07:33:17.261252 [debug] [MainThread]: On master: BEGIN
+[0m07:33:17.261471 [debug] [MainThread]: SQL status: BEGIN in 0.000 seconds
+[0m07:33:17.261611 [debug] [MainThread]: On master: COMMIT
+[0m07:33:17.261747 [debug] [MainThread]: Using postgres connection "master"
+[0m07:33:17.261891 [debug] [MainThread]: On master: COMMIT
+[0m07:33:17.262102 [debug] [MainThread]: SQL status: COMMIT in 0.000 seconds
+[0m07:33:17.262266 [debug] [MainThread]: On master: Close
+[0m07:33:17.264479 [debug] [Thread-1 (]: Began running node model.alphyra.stg_company_financials
+[0m07:33:17.264776 [info ] [Thread-1 (]: 1 of 1 START sql view model staging_staging.stg_company_financials ............. [RUN]
+[0m07:33:17.265064 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_alphyra_staging_staging, now model.alphyra.stg_company_financials)
+[0m07:33:17.265316 [debug] [Thread-1 (]: Began compiling node model.alphyra.stg_company_financials
+[0m07:33:17.268787 [debug] [Thread-1 (]: Writing injected SQL for node "model.alphyra.stg_company_financials"
+[0m07:33:17.269761 [debug] [Thread-1 (]: Began executing node model.alphyra.stg_company_financials
+[0m07:33:17.285834 [debug] [Thread-1 (]: Writing runtime sql for node "model.alphyra.stg_company_financials"
+[0m07:33:17.287568 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:33:17.287980 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: BEGIN
+[0m07:33:17.288237 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m07:33:17.292553 [debug] [Thread-1 (]: SQL status: BEGIN in 0.004 seconds
+[0m07:33:17.292891 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:33:17.293134 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "node_id": "model.alphyra.stg_company_financials"} */
+
+  create view "alphyra"."staging_staging"."stg_company_financials__dbt_tmp"
+    
+    
+  as (
+    
+
+with company_info as (
+    SELECT 
+        id,
+        UPPER(symbol) as symbol,
+        source,
+        metric_type,
+        metric_name,
+        metric_period,
+        metric_value,
+        retrieved_at,
+        raw_json,
+        created_at
+    
+    FROM  "alphyra"."raw"."company_financials"
+ ),
+
+renamed as (
+    SELECT 
+        id,
+        symbol,
+        source,
+        metric_type,
+        metric_name,
+        metric_period,
+        metric_value::float as metric_value,
+        retrieved_at::timestamp as retrieved_at,
+        raw_json,
+        created_at
+    
+    FROM company_info
+)
+
+SELECT *
+FROM renamed
+  );
+[0m07:33:17.293547 [debug] [Thread-1 (]: Postgres adapter: Postgres error: column "id" does not exist
+LINE 11:         id,
+                 ^
+
+[0m07:33:17.293728 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: ROLLBACK
+[0m07:33:17.294318 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: Close
+[0m07:33:17.298162 [debug] [Thread-1 (]: Database Error in model stg_company_financials (models/staging/stg_company_financials.sql)
+  column "id" does not exist
+  LINE 11:         id,
+                   ^
+  compiled code at target/run/alphyra/models/staging/stg_company_financials.sql
+[0m07:33:17.299608 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '8323dbb0-baed-453c-b095-7cd04181df44', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb6106890>]}
+[0m07:33:17.300055 [error] [Thread-1 (]: 1 of 1 ERROR creating sql view model staging_staging.stg_company_financials .... [[31mERROR[0m in 0.03s]
+[0m07:33:17.300609 [debug] [Thread-1 (]: Finished running node model.alphyra.stg_company_financials
+[0m07:33:17.300999 [debug] [Thread-7 (]: Marking all children of 'model.alphyra.stg_company_financials' to be skipped because of status 'error'.  Reason: Database Error in model stg_company_financials (models/staging/stg_company_financials.sql)
+  column "id" does not exist
+  LINE 11:         id,
+                   ^
+  compiled code at target/run/alphyra/models/staging/stg_company_financials.sql.
+[0m07:33:17.302084 [debug] [MainThread]: Using postgres connection "master"
+[0m07:33:17.302271 [debug] [MainThread]: On master: BEGIN
+[0m07:33:17.302413 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m07:33:17.305750 [debug] [MainThread]: SQL status: BEGIN in 0.003 seconds
+[0m07:33:17.305994 [debug] [MainThread]: On master: COMMIT
+[0m07:33:17.306157 [debug] [MainThread]: Using postgres connection "master"
+[0m07:33:17.306335 [debug] [MainThread]: On master: COMMIT
+[0m07:33:17.306553 [debug] [MainThread]: SQL status: COMMIT in 0.000 seconds
+[0m07:33:17.306712 [debug] [MainThread]: On master: Close
+[0m07:33:17.306924 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m07:33:17.307163 [debug] [MainThread]: Connection 'model.alphyra.stg_company_financials' was properly closed.
+[0m07:33:17.307446 [info ] [MainThread]: 
+[0m07:33:17.307687 [info ] [MainThread]: Finished running 1 view model in 0 hours 0 minutes and 0.10 seconds (0.10s).
+[0m07:33:17.308123 [debug] [MainThread]: Command end result
+[0m07:33:17.322395 [debug] [MainThread]: Wrote artifact WritableManifest to /app/target/manifest.json
+[0m07:33:17.323606 [debug] [MainThread]: Wrote artifact SemanticManifest to /app/target/semantic_manifest.json
+[0m07:33:17.326709 [debug] [MainThread]: Wrote artifact RunExecutionResult to /app/target/run_results.json
+[0m07:33:17.326919 [info ] [MainThread]: 
+[0m07:33:17.327120 [info ] [MainThread]: [31mCompleted with 1 error, 0 partial successes, and 0 warnings:[0m
+[0m07:33:17.327419 [info ] [MainThread]: 
+[0m07:33:17.327703 [error] [MainThread]: [31mFailure in model stg_company_financials (models/staging/stg_company_financials.sql)[0m
+[0m07:33:17.327975 [error] [MainThread]:   Database Error in model stg_company_financials (models/staging/stg_company_financials.sql)
+  column "id" does not exist
+  LINE 11:         id,
+                   ^
+  compiled code at target/run/alphyra/models/staging/stg_company_financials.sql
+[0m07:33:17.328167 [info ] [MainThread]: 
+[0m07:33:17.328414 [info ] [MainThread]:   compiled code at target/compiled/alphyra/models/staging/stg_company_financials.sql
+[0m07:33:17.328594 [info ] [MainThread]: 
+[0m07:33:17.328842 [info ] [MainThread]: Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1
+[0m07:33:17.329416 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.5412157, "process_in_blocks": "2536", "process_kernel_time": 0.065917, "process_mem_max_rss": "124660", "process_out_blocks": "2730", "process_user_time": 1.129578}
+[0m07:33:17.329677 [debug] [MainThread]: Command `dbt run` failed at 07:33:17.329630 after 0.54 seconds
+[0m07:33:17.329901 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb9b84a60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb8ac6740>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffbbad6e00>]}
+[0m07:33:17.330149 [debug] [MainThread]: Flushing usage events
+[0m07:33:18.459561 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m07:34:29.944282 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff907749d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8f66c1f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8f66c190>]}
+
+
+============================== 07:34:29.946565 | 8aec6450-c835-431d-af41-4f13bc564c5f ==============================
+[0m07:34:29.946565 [info ] [MainThread]: Running with dbt=1.10.15
+[0m07:34:29.946926 [debug] [MainThread]: running dbt with arguments {'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'log_format': 'default', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'no_print': 'None', 'fail_fast': 'False', 'profiles_dir': '/app/infra/dbt', 'empty': 'False', 'indirect_selection': 'eager', 'printer_width': '80', 'log_path': '/app/logs', 'log_cache_events': 'False', 'warn_error': 'None', 'write_json': 'True', 'static_parser': 'True', 'invocation_command': 'dbt run --profiles-dir /app/infra/dbt --select stg_company_financials', 'use_experimental_parser': 'False', 'cache_selected_only': 'False', 'debug': 'False', 'version_check': 'True', 'quiet': 'False', 'introspect': 'True', 'use_colors': 'True'}
+[0m07:34:30.009532 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8f6b67a0>]}
+[0m07:34:30.032252 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8f65d4e0>]}
+[0m07:34:30.032602 [info ] [MainThread]: Registered adapter: postgres=1.9.1
+[0m07:34:30.058043 [debug] [MainThread]: checksum: 14a228079bd6df63ba81633f9a3cf44ecfaa31056ac397c602753ec895dbf885, vars: {}, profile: , target: , version: 1.10.15
+[0m07:34:30.106032 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m07:34:30.106355 [debug] [MainThread]: Partial parsing: updated file: alphyra://models/staging/stg_company_financials.sql
+[0m07:34:30.247809 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.alphyra.marts
+- models.alphyra.iceberg
+- models.alphyra.intermediate
+[0m07:34:30.254400 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8dfa9870>]}
+[0m07:34:30.292646 [debug] [MainThread]: Wrote artifact WritableManifest to /app/target/manifest.json
+[0m07:34:30.293675 [debug] [MainThread]: Wrote artifact SemanticManifest to /app/target/semantic_manifest.json
+[0m07:34:30.301103 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8db2c4c0>]}
+[0m07:34:30.301384 [info ] [MainThread]: Found 5 models, 5 sources, 459 macros
+[0m07:34:30.301644 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8db2c400>]}
+[0m07:34:30.302373 [info ] [MainThread]: 
+[0m07:34:30.302676 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m07:34:30.302909 [info ] [MainThread]: 
+[0m07:34:30.303259 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m07:34:30.303773 [debug] [ThreadPool]: Acquiring new postgres connection 'list_alphyra'
+[0m07:34:30.316945 [debug] [ThreadPool]: Using postgres connection "list_alphyra"
+[0m07:34:30.317253 [debug] [ThreadPool]: On list_alphyra: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "list_alphyra"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m07:34:30.317455 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m07:34:30.322117 [debug] [ThreadPool]: SQL status: SELECT 8 in 0.005 seconds
+[0m07:34:30.322697 [debug] [ThreadPool]: On list_alphyra: Close
+[0m07:34:30.324929 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_alphyra, now list_alphyra_staging_staging)
+[0m07:34:30.327429 [debug] [ThreadPool]: Using postgres connection "list_alphyra_staging_staging"
+[0m07:34:30.327637 [debug] [ThreadPool]: On list_alphyra_staging_staging: BEGIN
+[0m07:34:30.327821 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m07:34:30.330888 [debug] [ThreadPool]: SQL status: BEGIN in 0.003 seconds
+[0m07:34:30.331086 [debug] [ThreadPool]: Using postgres connection "list_alphyra_staging_staging"
+[0m07:34:30.331279 [debug] [ThreadPool]: On list_alphyra_staging_staging: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "list_alphyra_staging_staging"} */
+select
+      'alphyra' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'staging_staging'
+    union all
+    select
+      'alphyra' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'staging_staging'
+    union all
+    select
+      'alphyra' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'staging_staging'
+  
+[0m07:34:30.332369 [debug] [ThreadPool]: SQL status: SELECT 0 in 0.001 seconds
+[0m07:34:30.332888 [debug] [ThreadPool]: On list_alphyra_staging_staging: ROLLBACK
+[0m07:34:30.333131 [debug] [ThreadPool]: On list_alphyra_staging_staging: Close
+[0m07:34:30.334975 [debug] [MainThread]: Using postgres connection "master"
+[0m07:34:30.335198 [debug] [MainThread]: On master: BEGIN
+[0m07:34:30.335370 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m07:34:30.338474 [debug] [MainThread]: SQL status: BEGIN in 0.003 seconds
+[0m07:34:30.338682 [debug] [MainThread]: Using postgres connection "master"
+[0m07:34:30.338914 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "connection_name": "master"} */
+select distinct
+        dependent_namespace.nspname as dependent_schema,
+        dependent_class.relname as dependent_name,
+        referenced_namespace.nspname as referenced_schema,
+        referenced_class.relname as referenced_name
+
+    -- Query for views: views are entries in pg_class with an entry in pg_rewrite, but we avoid
+    -- a seq scan on pg_rewrite by leveraging the fact there is an "internal" row in pg_depend for
+    -- the view...
+    from pg_class as dependent_class
+    join pg_namespace as dependent_namespace on dependent_namespace.oid = dependent_class.relnamespace
+    join pg_depend as dependent_depend on dependent_depend.refobjid = dependent_class.oid
+        and dependent_depend.classid = 'pg_rewrite'::regclass
+        and dependent_depend.refclassid = 'pg_class'::regclass
+        and dependent_depend.deptype = 'i'
+
+    -- ... and via pg_depend (that has a row per column, hence the need for "distinct" above, and
+    -- making sure to exclude the internal row to avoid a view appearing to depend on itself)...
+    join pg_depend as joining_depend on joining_depend.objid = dependent_depend.objid
+        and joining_depend.classid = 'pg_rewrite'::regclass
+        and joining_depend.refclassid = 'pg_class'::regclass
+        and joining_depend.refobjid != dependent_depend.refobjid
+
+    -- ... we can find the tables they query from in pg_class, but excluding system tables. Note we
+    -- don't need need to exclude _dependent_ system tables, because they only query from other
+    -- system tables, and so are automatically excluded by excluding _referenced_ system tables
+    join pg_class as referenced_class on referenced_class.oid = joining_depend.refobjid
+    join pg_namespace as referenced_namespace on referenced_namespace.oid = referenced_class.relnamespace
+        and referenced_namespace.nspname != 'information_schema'
+        and referenced_namespace.nspname not like 'pg\_%'
+
+    order by
+        dependent_schema, dependent_name, referenced_schema, referenced_name;
+[0m07:34:30.340106 [debug] [MainThread]: SQL status: SELECT 0 in 0.001 seconds
+[0m07:34:30.340584 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8f625840>]}
+[0m07:34:30.340830 [debug] [MainThread]: On master: ROLLBACK
+[0m07:34:30.341111 [debug] [MainThread]: Using postgres connection "master"
+[0m07:34:30.341281 [debug] [MainThread]: On master: BEGIN
+[0m07:34:30.341578 [debug] [MainThread]: SQL status: BEGIN in 0.000 seconds
+[0m07:34:30.341764 [debug] [MainThread]: On master: COMMIT
+[0m07:34:30.341969 [debug] [MainThread]: Using postgres connection "master"
+[0m07:34:30.342130 [debug] [MainThread]: On master: COMMIT
+[0m07:34:30.342363 [debug] [MainThread]: SQL status: COMMIT in 0.000 seconds
+[0m07:34:30.342540 [debug] [MainThread]: On master: Close
+[0m07:34:30.344401 [debug] [Thread-1 (]: Began running node model.alphyra.stg_company_financials
+[0m07:34:30.344722 [info ] [Thread-1 (]: 1 of 1 START sql view model staging_staging.stg_company_financials ............. [RUN]
+[0m07:34:30.345061 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_alphyra_staging_staging, now model.alphyra.stg_company_financials)
+[0m07:34:30.345317 [debug] [Thread-1 (]: Began compiling node model.alphyra.stg_company_financials
+[0m07:34:30.348770 [debug] [Thread-1 (]: Writing injected SQL for node "model.alphyra.stg_company_financials"
+[0m07:34:30.349515 [debug] [Thread-1 (]: Began executing node model.alphyra.stg_company_financials
+[0m07:34:30.364026 [debug] [Thread-1 (]: Writing runtime sql for node "model.alphyra.stg_company_financials"
+[0m07:34:30.365006 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:34:30.365263 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: BEGIN
+[0m07:34:30.365461 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m07:34:30.369053 [debug] [Thread-1 (]: SQL status: BEGIN in 0.004 seconds
+[0m07:34:30.369270 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:34:30.369443 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "node_id": "model.alphyra.stg_company_financials"} */
+
+  create view "alphyra"."staging_staging"."stg_company_financials__dbt_tmp"
+    
+    
+  as (
+    
+
+with company_info as (
+    SELECT 
+        UPPER(symbol) as symbol,
+        source,
+        metric_type,
+        metric_name,
+        metric_period,
+        metric_value,
+        retrieved_at,
+        raw_json,
+        created_at
+    
+    FROM  "alphyra"."raw"."company_financials"
+ ),
+
+renamed as (
+    SELECT 
+        symbol,
+        source,
+        metric_type,
+        metric_name,
+        metric_period,
+        metric_value::float as metric_value,
+        retrieved_at::timestamp as retrieved_at,
+        raw_json,
+        created_at
+    
+    FROM company_info
+)
+
+SELECT *
+FROM renamed
+  );
+[0m07:34:30.373406 [debug] [Thread-1 (]: SQL status: CREATE VIEW in 0.004 seconds
+[0m07:34:30.376141 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:34:30.376368 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "node_id": "model.alphyra.stg_company_financials"} */
+alter table "alphyra"."staging_staging"."stg_company_financials__dbt_tmp" rename to "stg_company_financials"
+[0m07:34:30.376891 [debug] [Thread-1 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m07:34:30.382214 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: COMMIT
+[0m07:34:30.382404 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:34:30.382552 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: COMMIT
+[0m07:34:30.383050 [debug] [Thread-1 (]: SQL status: COMMIT in 0.000 seconds
+[0m07:34:30.385335 [debug] [Thread-1 (]: Applying DROP to: "alphyra"."staging_staging"."stg_company_financials__dbt_backup"
+[0m07:34:30.386921 [debug] [Thread-1 (]: Using postgres connection "model.alphyra.stg_company_financials"
+[0m07:34:30.387104 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: /* {"app": "dbt", "dbt_version": "1.10.15", "profile_name": "alphyra", "target_name": "dev", "node_id": "model.alphyra.stg_company_financials"} */
+drop view if exists "alphyra"."staging_staging"."stg_company_financials__dbt_backup" cascade
+[0m07:34:30.387383 [debug] [Thread-1 (]: SQL status: DROP VIEW in 0.000 seconds
+[0m07:34:30.388475 [debug] [Thread-1 (]: On model.alphyra.stg_company_financials: Close
+[0m07:34:30.389304 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '8aec6450-c835-431d-af41-4f13bc564c5f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff9390fd90>]}
+[0m07:34:30.389646 [info ] [Thread-1 (]: 1 of 1 OK created sql view model staging_staging.stg_company_financials ........ [[32mCREATE VIEW[0m in 0.04s]
+[0m07:34:30.389984 [debug] [Thread-1 (]: Finished running node model.alphyra.stg_company_financials
+[0m07:34:30.390729 [debug] [MainThread]: Using postgres connection "master"
+[0m07:34:30.390917 [debug] [MainThread]: On master: BEGIN
+[0m07:34:30.391082 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m07:34:30.393916 [debug] [MainThread]: SQL status: BEGIN in 0.003 seconds
+[0m07:34:30.394081 [debug] [MainThread]: On master: COMMIT
+[0m07:34:30.394223 [debug] [MainThread]: Using postgres connection "master"
+[0m07:34:30.394353 [debug] [MainThread]: On master: COMMIT
+[0m07:34:30.394559 [debug] [MainThread]: SQL status: COMMIT in 0.000 seconds
+[0m07:34:30.394713 [debug] [MainThread]: On master: Close
+[0m07:34:30.394933 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m07:34:30.395080 [debug] [MainThread]: Connection 'model.alphyra.stg_company_financials' was properly closed.
+[0m07:34:30.395242 [info ] [MainThread]: 
+[0m07:34:30.395456 [info ] [MainThread]: Finished running 1 view model in 0 hours 0 minutes and 0.09 seconds (0.09s).
+[0m07:34:30.395864 [debug] [MainThread]: Command end result
+[0m07:34:30.408873 [debug] [MainThread]: Wrote artifact WritableManifest to /app/target/manifest.json
+[0m07:34:30.409957 [debug] [MainThread]: Wrote artifact SemanticManifest to /app/target/semantic_manifest.json
+[0m07:34:30.412909 [debug] [MainThread]: Wrote artifact RunExecutionResult to /app/target/run_results.json
+[0m07:34:30.413106 [info ] [MainThread]: 
+[0m07:34:30.413315 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m07:34:30.413480 [info ] [MainThread]: 
+[0m07:34:30.413710 [info ] [MainThread]: Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[0m07:34:30.414270 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": true, "command_wall_clock_time": 0.49206105, "process_in_blocks": "0", "process_kernel_time": 0.037277, "process_mem_max_rss": "122092", "process_out_blocks": "2728", "process_user_time": 1.11328}
+[0m07:34:30.414535 [debug] [MainThread]: Command `dbt run` succeeded at 07:34:30.414494 after 0.49 seconds
+[0m07:34:30.414727 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff907749d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff9390fd90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff8f6b67a0>]}
+[0m07:34:30.414899 [debug] [MainThread]: Flushing usage events
+[0m07:34:32.419765 [debug] [MainThread]: An error was encountered while trying to flush usage events

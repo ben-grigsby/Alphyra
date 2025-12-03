@@ -137,13 +137,13 @@ def search_stock_video_ids(query, folder_path, from_date, to_date, max_runs=5):
 
 
 
-def process_single_video(row, news_df, output_dir):
+def process_single_video(row_dict, output_dir):
     try:
-        symbol = row['symbol']
-        filename = row['video_id']
-        url = row['url']
-        id = row['video_id']
-        publish_date = row['publish_date']
+        symbol = row_dict['symbol']
+        filename = row_dict['video_id']
+        url = row_dict['url']
+        id = row_dict['video_id']
+        publish_date = str(row_dict['publish_date'])
 
         output_path = f"downloads/{symbol}"
 
@@ -154,7 +154,9 @@ def process_single_video(row, news_df, output_dir):
         print(f"[INFO] Completed downloading {symbol}: {id} -> {output_path}")
         print("\n")
 
+        print(f"[DEBUG] Starting transcription for {id}")
         transcript_path = transcribe_mp3(mp3_full_output_path, output_dir)
+        print(f"[DEBUG] Finished transcription for {id}")
 
         if os.path.exists(mp3_full_output_path):
             # print(f"[TEST] Deleting {mp3_full_output_path}")
@@ -195,27 +197,28 @@ def process_single_video(row, news_df, output_dir):
 
 
 
-def download_transcribe_analyze_mp3(query_news, query_videos, output_dir, max_threads=4):
+def download_transcribe_analyze_mp3(query_news, query_videos, output_dir, max_threads=8):
 
     video_id_df = get_db_info(query_videos)
     news_df = get_db_info(query_news)
 
     futures = []
     processed_ids = load_processed_ids()
-    max_videos = 4
-    count = 0 
 
     with ThreadPoolExecutor(max_workers=max_threads) as executor:
         for _, row in video_id_df.iterrows():
-            if count > max_videos:
-                break
             if row['video_id'] in processed_ids:
                 continue
-            futures.append(executor.submit(process_single_video, row, news_df, output_dir))
-            count += 1
+            futures.append(executor.submit(process_single_video, row.to_dict(), output_dir))
+
         
         for future in as_completed(futures):
-            print(future.result())
+            try:
+                print(future.result(timeout=1200))  # Timeout after 20 minutes
+            except TimeoutError:
+                print("[TIMEOUT] A task exceeded the 20-minute limit and was killed.")
+            except Exception as e:
+                print(f"[FATAL] {row['video_id']} Future crashed with: {e}")
     
 
 
@@ -223,5 +226,6 @@ if __name__ == '__main__':
     query1 = "SELECT * FROM raw.news"
     query2 = "SELECT * FROM raw.videos"
 
-    download_transcribe_analyze_mp3(query1,  query2, "downloads/transcriptions")
+    search_stock_video_ids(query1, 'downloads', '11-17-2025', '11-21-2025')
+    # download_transcribe_analyze_mp3(query1,  query2, "downloads/transcriptions")
 

@@ -159,4 +159,4 @@ def stock_researcher(top_stocks, from_date, to_date, n):
 
 
 if __name__ == '__main__':
-    stock_researcher(tech_master_symbol_set, '2025-11-10', '2025-11-14', 100)
+    stock_researcher(tech_master_symbol_set, '2025-11-17', '2025-11-21', 100)

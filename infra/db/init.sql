@@ -59,3 +59,16 @@ CREATE TABLE IF NOT EXISTS raw.stock_prices (
     volume BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Create raw company financials table
+CREATE TABLE IF NOT EXISTS raw.company_financials (
+    symbol TEXT,
+    source TEXT,
+    metric_type TEXT,
+    metric_name TEXT,
+    metric_period TEXT,
+    metric_value FLOAT,
+    retrieved_at TIMESTAMP,
+    raw_json TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

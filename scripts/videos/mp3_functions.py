@@ -1,37 +1,53 @@
 import whisper
 import os
+import subprocess
 
-def transcribe_mp3(input_path, output_dir):
+def transcribe_mp3(input_path, output_dir, model_size="base", timeout_sec=1200):
     """
-    Transcribe an MP3 audio file using OpenAI Whisper and save the text output.
-
-    Args:
-        input_path (str): Path to the MP3 file to be transcribed.
-        output_dir (str): Directory where the resulting transcript (.txt) file will be saved.
-                          The directory will be created if it does not already exist.
-
-    Returns:
-        str: The full file path to the saved transcript (.txt).
-
-    Notes:
-        - Uses the Whisper "base" model for transcription.
-        - Output transcript is saved as a UTF-8 encoded .txt file.
+    Transcribe audio using subprocess call to Whisper CLI (installed via whisper package).
     """
-    model = whisper.load_model("base")
-    result = model.transcribe(input_path)
-    transcript = result['text']
 
+    # Make sure output dir exists
     os.makedirs(output_dir, exist_ok=True)
 
+    command = [
+        "whisper",
+        input_path,
+        "--model", model_size,
+        "--output_dir", output_dir,
+        "--output_format", "txt"
+    ]
 
-    base_name = os.path.splitext(os.path.basename(input_path))[0]
-    output_path = os.path.join(output_dir, f"{base_name}.txt")
+    try:
+        print(f"[DEBUG] Transcribing via subprocess: {input_path}")
+        result = subprocess.run(command, capture_output=True, text=True, timeout=timeout_sec)
 
-    with open(output_path, "w", encoding='utf-8') as f:
-        f.write(transcript)
-    
-    print(f"Saved transcription to {output_path}")
-    return output_path
+        if result.returncode != 0:
+            print(f"[ERROR] Whisper failed: {result.stderr}")
+            raise RuntimeError("Whisper subprocess failed")
+
+        print(f"[INFO] Subprocess transcription completed: {input_path}")
+        
+        # Determine the expected output file path
+        base_name = os.path.splitext(os.path.basename(input_path))[0]
+        output_path = os.path.join(output_dir, f"{base_name}.txt")
+
+        return output_path
+
+    except subprocess.TimeoutExpired:
+        print(f"[TIMEOUT] Whisper transcription exceeded {timeout_sec} seconds for file: {input_path}")
+        if os.path.exists(input_path):
+            os.remove(input_path)
+            print(f"[CLEANUP] Deleted input file due to timeout: {input_path}")
+        raise
+
+
+    except Exception as e:
+        print(f"[ERROR] Subprocess transcription failed: {e}. File: {input_path}")
+        if os.path.exists(input_path):
+            os.remove(input_path)
+            print(f"[CLEANUP] Deleted input file due to failure: {input_path}")
+        raise
 
 
 if __name__ == '__main__':
