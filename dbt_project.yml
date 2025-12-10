@@ -24,7 +24,7 @@ models:
 
     intermediate:
       +schema: intermediate
-      +materialized: ephemeral
+      +materialized: view
       +tags: ['intermediate']
 
     marts:

@@ -1,6 +1,4 @@
-{{ config(
-    materialized='view'
-) }}
+
 
 with sentiment as (
     select
@@ -14,7 +12,7 @@ with sentiment as (
         source_url,
         published_at,
         created_at
-    from {{ source('raw', 'sentiment')}}
+    from "alphyra"."raw"."sentiment"
 ),
 
 renamed as (

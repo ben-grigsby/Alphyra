@@ -1,6 +1,9 @@
-{{ config(
-    materialized='view'
-) }}
+
+  create view "alphyra"."staging_staging"."stg_videos__dbt_tmp"
+    
+    
+  as (
+    
 
 with videos as (
     select
@@ -11,7 +14,7 @@ with videos as (
         transcript_path,
         publish_date,
         created_at
-    from {{ source('raw', 'videos') }}
+    from "alphyra"."raw"."videos"
 ),
 
 renamed as (
@@ -28,3 +31,4 @@ renamed as (
 
 select *
 from renamed
+  );

@@ -5,12 +5,106 @@ models:
     description: "Cleaned financial metrics from Finnhub + SEC filings."
     columns:
       - name: symbol
-        description: "Ticker symbol"
-      - name: metric_name
-        description: "Metric name from Finnhub or SEC"
-      - name: metric_value
-        description: "Numeric value"
-      - name: metric_period
-        description: "Annual, TTM, YoY, etc."
+        description: "Company ticker symbol"
       - name: source
         description: "finnhub or SEC 10-K"
+      - name: metric_type
+        description: "valuation or balance sheet"
+      - name: metric_name
+        description: "Metric name from Finnhub or SEC"
+      - name: metric_period
+        description: "Annual, TTM, YoY, etc."
+      - name: metric_value
+        description: "Numeric value"
+      - name: retrieved_at
+        description: "Date of data pull"
+      - name: raw_json
+        description: "Record of the JSON file from API"
+  
+
+
+  - name: stg_videos
+    description: "Identifying information about videos"
+    columns:
+      - name: symbol
+        description: "Company ticker symbol"
+      - name: video_id
+        description: "YouTube video ID"
+      - name: title
+        description: "Title of YouTube video"
+      - name: url
+        description: "URL to access YouTube video"
+      - name: transcript_path
+        description: "File path of where to store Whisper transcript"
+      - name: publish_date
+        description: "Date when video was uploaded to YouTube"
+
+
+
+  - name: stg_stock_prices
+    description: "OHLCV values of different stocks"
+    columns:
+      - name: symbol
+        description: "Company ticker symbol"
+      - name: date
+        description: "Specific date relevant to values"
+      - name: open
+        description: "Stock opening value"
+      - name: high
+        description: "Highest stock value that day"
+      - name: low
+        description: "Lowest stock value that day"
+      - name: close
+        description: "Stock closing value"
+      - name: volume
+        description: "Total number of stocks traded that day"
+  
+
+
+  - name: stg_sentiment
+    description: "Sentiment scores for different sentences from different sources"
+    columns:
+      - name: sentence
+        description: "Sentence to run sentiment analysis on"
+      - name: symbol
+        description: "Company ticker symbol"
+      - name: positive_score
+        description: "Probability of sentence having a positive sentiment score"
+      - name: neutral_score
+        description: "Probability of sentence having a neutral sentiment score"
+      - name: negative_score
+        description: "Probability of sentence having a negative sentiment score"
+      - name: model_name
+        description: "Sentiment analysis model used to determine sentence sentiment"
+      - name: source_type
+        description: "Medium from where the sentence comes from"
+      - name: source_url
+        description: "URL linking back to the official source"
+      - name: published_at
+        description: "Date when source was published online"
+
+
+
+  - name: stg_news
+    description: "Company news articles from Finnhub"
+    columns:
+      - name: company_name 
+        description: "Name of the company"
+      - name: sector
+        description: "Market sector that the company belongs to"
+      - name: symbol
+        description: "Company ticker symbol"
+      - name: headline
+        description: "Headline of the news article"
+      - name: summary
+        description: "Summary of the news article"
+      - name: source
+        description: "Where the article came from"
+      - name: category
+        description: "Category which the news article belongs to"
+      - name: published_at
+        description: "Publication date of the news article"
+      - name: url
+        description: "URL linking back to the original website with the article"
+      - name: raw_json
+        description: "Raw JSON entry to record the API response"

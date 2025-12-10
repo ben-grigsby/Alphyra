@@ -1,6 +1,4 @@
-{{ config(
-    materialized='view'
-) }}
+
 
 with videos as (
     select
@@ -11,7 +9,7 @@ with videos as (
         transcript_path,
         publish_date,
         created_at
-    from {{ source('raw', 'videos') }}
+    from "alphyra"."raw"."videos"
 ),
 
 renamed as (

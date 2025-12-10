@@ -1,6 +1,9 @@
-{{ config(
-    materialized='view'
-) }}
+
+  create view "alphyra"."staging_staging"."stg_news__dbt_tmp"
+    
+    
+  as (
+    
 
 with news as (
     select
@@ -15,7 +18,7 @@ with news as (
         url,
         raw_json,
         created_at
-    from {{ source('raw', 'news') }}
+    from "alphyra"."raw"."news"
 ),
 
 renamed as (
@@ -36,3 +39,4 @@ renamed as (
 
 select *
 from renamed
+  );

@@ -1,6 +1,4 @@
-{{ config(
-    materialized='view'
-) }}
+
 
 with news as (
     select
@@ -15,7 +13,7 @@ with news as (
         url,
         raw_json,
         created_at
-    from {{ source('raw', 'news') }}
+    from "alphyra"."raw"."news"
 ),
 
 renamed as (

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: int_company_fundamentals
+    description: "Pivoted financial metrics (one row per symbol)."
+    columns:
+      - name: symbol
+        description: "Company ticker symbol"
+      - name: retrieved_date
+        description: "Date when data was pulled"
+      - name: ps_ttm
+        description: "Price to Sales Ratio (trailing twelve months)"
+      - name: revenue_growth_5y
+        description: "5-Year Revenue Growth Rate"
+      - name: roi_ttm
+        description: "Return on Investment (trailing twelve months)"
+      - name: quick_ratio_quarterly
+        description: "Company's ability to meet short-term liabilities using only its most liquid assets"
+      - name: net_profit_margin_ttm
+        description: "Profitability over the trailing twelve months"
+      - name: eps_growth_ttm_yoy
+        description: "Year-over-year growth rate of trailing-twelve-month earnings per share"
+      - name: total_debt_total_equity
+        description: "How much debt a company has relative to its equity using the most recent quarterly balance sheet"

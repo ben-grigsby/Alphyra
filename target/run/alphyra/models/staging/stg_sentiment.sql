@@ -1,6 +1,9 @@
-{{ config(
-    materialized='view'
-) }}
+
+  create view "alphyra"."staging_staging"."stg_sentiment__dbt_tmp"
+    
+    
+  as (
+    
 
 with sentiment as (
     select
@@ -14,7 +17,7 @@ with sentiment as (
         source_url,
         published_at,
         created_at
-    from {{ source('raw', 'sentiment')}}
+    from "alphyra"."raw"."sentiment"
 ),
 
 renamed as (
@@ -34,3 +37,4 @@ renamed as (
 
 select *
 from renamed
+  );

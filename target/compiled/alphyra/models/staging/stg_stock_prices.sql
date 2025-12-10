@@ -1,6 +1,4 @@
-{{ config(
-    materialized='view'
-)   }}
+
 
 with stock_prices as (
     select 
@@ -12,7 +10,7 @@ with stock_prices as (
         close,
         volume,
         created_at
-    from {{ source('raw', 'stock_prices')}}
+    from "alphyra"."raw"."stock_prices"
 ),
 
 renamed as (

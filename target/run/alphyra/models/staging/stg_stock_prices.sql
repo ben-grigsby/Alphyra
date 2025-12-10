@@ -1,6 +1,9 @@
-{{ config(
-    materialized='view'
-)   }}
+
+  create view "alphyra"."staging_staging"."stg_stock_prices__dbt_tmp"
+    
+    
+  as (
+    
 
 with stock_prices as (
     select 
@@ -12,7 +15,7 @@ with stock_prices as (
         close,
         volume,
         created_at
-    from {{ source('raw', 'stock_prices')}}
+    from "alphyra"."raw"."stock_prices"
 ),
 
 renamed as (
@@ -30,3 +33,4 @@ renamed as (
 
 select *
 from renamed
+  );

@@ -4,7 +4,7 @@
 
 with company_info as (
     SELECT 
-        UPPER(symbol) as symbol,
+        upper(trim(symbol)) as symbol,
         source,
         metric_type,
         metric_name,
