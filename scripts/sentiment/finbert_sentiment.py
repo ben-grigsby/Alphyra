@@ -13,11 +13,13 @@ model = AutoModelForSequenceClassification.from_pretrained('yiyanghkust/finbert-
 labels = ['neutral', 'positive', 'negative']
 
 def analyze_sentiment(text):
-    inputs = tokenizer(text, return_tensors='pt', truncation=True, padding=True)
+    inputs = tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=512)
     outputs = model(**inputs)
     probs = softmax(outputs.logits, dim=1).detach().numpy()[0]
 
     return {label: float(score) for label, score in zip(labels, probs)}
+
+
 
 if __name__ == '__main__':
     sentences = split_into_sentences('downloads/transcriptions/nvidia_test.txt')

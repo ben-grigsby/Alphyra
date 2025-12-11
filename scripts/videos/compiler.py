@@ -167,7 +167,7 @@ def process_single_video(row_dict, output_dir):
 
         sentiment_records = []
         
-        sentences = split_into_sentences(transcript_path)
+        sentences = split_into_sentences(text_path=transcript_path)
 
         for sent in sentences:
             sentiment_analysis = analyze_sentiment(sent)

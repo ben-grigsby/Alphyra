@@ -15,8 +15,5 @@
 
 -- SELECT * FROM staging_intermediate.int_daily_stock_values
 
--- SELECT MAX(date), MIN(date) FROM raw.stock_prices
 
--- SELECT * FROM raw.stock_prices WHERE symbol = 'SPY' LIMIT 10
-
-SELECT symbol, MAX(date), MIN(date) FROM raw.stock_prices GROUP BY symbol
+SELECT * FROM staging_intermediate.int_ml_ready_table
