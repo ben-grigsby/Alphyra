@@ -7,6 +7,9 @@ def transcribe_mp3(input_path, output_dir, model_size="base", timeout_sec=1200):
     Transcribe audio using subprocess call to Whisper CLI (installed via whisper package).
     """
 
+    video_dir = os.path.dirname(input_path)
+    os.makedirs(video_dir, exist_ok=True)
+
     # Make sure output dir exists
     os.makedirs(output_dir, exist_ok=True)
 
@@ -20,19 +23,23 @@ def transcribe_mp3(input_path, output_dir, model_size="base", timeout_sec=1200):
 
     try:
         print(f"[DEBUG] Transcribing via subprocess: {input_path}")
-        result = subprocess.run(command, capture_output=True, text=True, timeout=timeout_sec)
+        result = subprocess.run(command, text=True, timeout=timeout_sec)
 
         if result.returncode != 0:
             print(f"[ERROR] Whisper failed: {result.stderr}")
             raise RuntimeError("Whisper subprocess failed")
 
-        print(f"[INFO] Subprocess transcription completed: {input_path}")
-        
-        # Determine the expected output file path
-        base_name = os.path.splitext(os.path.basename(input_path))[0]
-        output_path = os.path.join(output_dir, f"{base_name}.txt")
+        base = os.path.splitext(os.path.basename(input_path))[0]
+        generated_txt = os.path.join(video_dir, f"{base}.txt")
+        final_txt = os.path.join(video_dir, "transcript.txt")
 
-        return output_path
+        if os.path.exists(generated_txt):
+            os.rename(generated_txt, final_txt)
+
+        print(f"[INFO] Subprocess transcription completed: {input_path}")
+
+
+        return final_txt
 
     except subprocess.TimeoutExpired:
         print(f"[TIMEOUT] Whisper transcription exceeded {timeout_sec} seconds for file: {input_path}")

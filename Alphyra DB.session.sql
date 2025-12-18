@@ -16,4 +16,4 @@
 -- SELECT * FROM staging_intermediate.int_daily_stock_values
 
 
-SELECT * FROM staging_intermediate.int_ml_ready_table
+SELECT * FROM raw.videos WHERE symbol = 'REMX'

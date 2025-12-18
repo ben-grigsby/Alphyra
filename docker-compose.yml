@@ -6,6 +6,7 @@ services:
     volumes:
       - .:/app
       - ./data:/app/data
+      - ./downloads:/app/downloads
     working_dir: /app
     depends_on:
       - postgres

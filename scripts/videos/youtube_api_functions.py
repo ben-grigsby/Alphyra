@@ -89,26 +89,23 @@ def get_video_details(video_id):
         "language": item["snippet"].get("defaultAudioLanguage", "unknown")
     }
 
-    return data
 
 
-
-def download_youtube_vid_mp3(url, filename, output_path='downloads'):
+def download_youtube_vid_mp3(url, full_output_path):
     """
     Download the audio track of a YouTube video and save it as an MP3 file.
 
     Args:
         url (str): The URL of the YouTube video.
-        filename (str): The name of the output MP3 file (should include .mp3).
-        output_path (str): Directory where the file will be saved (default is 'downloads').
-
+        full_output_path (str): Full path for where the mp3 will be stored (ends in .mp3)
     Returns:
         None
     """
 
     print(f"Downloading video from {url}...")
-    os.makedirs(output_path, exist_ok=True)
-    full_output_path = os.path.join(output_path, filename)
+    parent_dir = os.path.dirname(full_output_path)
+    os.makedirs(parent_dir, exist_ok=True)
+
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': full_output_path,
@@ -123,7 +120,12 @@ def download_youtube_vid_mp3(url, filename, output_path='downloads'):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-    print(f"Successfully downloaded {filename}")
+    print(f"Successfully downloaded video to {full_output_path}")
 
     return full_output_path
 
+
+if __name__ == '__main__':
+    pub_after  = "2025-12-08T00:00:00Z"
+    pub_before = "2025-12-12T23:59:59Z"
+    print(search_youtube_videos("NVDA stock analysis", pub_after, pub_before))

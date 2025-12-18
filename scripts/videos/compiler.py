@@ -43,189 +43,146 @@ from scripts.sentiment.finbert_sentiment import (
 )
 
 
-def search_stock_video_ids(query, folder_path, from_date, to_date, max_runs=5):
-    stock_news_df = get_db_info(query)
 
-    stock_news_df = stock_news_df[
-        (stock_news_df['published_at'] >= from_date) &
-        (stock_news_df['published_at'] <= to_date)
-    ]
-
-    stock_news_df['day_only'] = pd.to_datetime(stock_news_df['published_at']).dt.date
-    stock_news_df['week_range'] = stock_news_df['day_only'].apply(get_week_range)
+def check_existing_video_id(new_video_zip, existing_video_zip_lst_set):
+    # zip = (symbol, video_id)
+    if new_video_zip in existing_video_zip_lst_set:
+        print(f"[INFO] Duplicate video for {new_video_zip[0]} encountered.")
+        return False
     
-    grouped_stock_df = (
-        stock_news_df
-        .groupby(['symbol', 'week_range'])
-        .agg({
-            'sector': 'first',
-            'company_name': 'first',
-            'headline': list,
-            'created_at': 'max'
-        })
-        .reset_index()
+    else:
+        return True
+
+
+
+def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
+    print("Starting video search and download function...")
+
+    pub_after = f"{pub_after}T00:00:00Z"
+    pub_before = f"{pub_before}T23:59:59Z"
+
+    existing_stocks = set(get_db_info(news_db_query)['symbol'].unique().tolist())
+    all_existing_videos_info_df = get_db_info(video_df_query)
+    existing_stock_video_tuple = set(
+        tuple(x)
+        for x in all_existing_videos_info_df[['symbol', 'video_id']].copy().itertuples(index=False)
     )
+    existing_video_ids = {t[1] for t in existing_stock_video_tuple}
 
-    grouped_stock_df = grouped_stock_df.sort_values("created_at", ascending=True)
+    df_lst = []
 
-    video_id_set = set()
-    run_count = 0
+    for stock in existing_stocks:
 
-    for _, row in grouped_stock_df.iterrows():
+        search_query = f"{stock} stock analysis"
+        stock_video_ids_lst = search_youtube_videos(search_query, pub_after, pub_before)
 
-        # if run_count >= max_runs:
-        #     print(f"[INFO] Reached testing limit of {max_runs} stocks. Stopping early.")
-        #     break
+        if not stock_video_ids_lst:
+            print(f"No videos for {stock} from {pub_after} to {pub_before}, moving on...")
+            continue
 
-        symbol = row['symbol']
+        symbol_id_zip = {(stock, id) for id in stock_video_ids_lst}
+        new_video_ids = symbol_id_zip - existing_stock_video_tuple
 
-        if len(row['headline']) > 3:
-            print("\n")
-            print(f"[INFO] RUN {run_count} ")
-            print("\n")
+        video_to_copy = {t[1] for t in new_video_ids if t[1] in existing_video_ids}
+        video_to_download = {t[1] for t in new_video_ids if t[1] not in existing_video_ids}
 
-            try:
-                monday, friday = row['week_range']
-            except Exception as e:
-                print(f"[ERROR] Invalid week_range for {symbol}: {e}")
-                continue
+        for id in video_to_copy:
+            print(f"Copying video id to be assigned to {stock}...")
 
-            youtube_search = f"{symbol} stock analysis"
-            pub_after = f"{monday}T00:00:00Z"   # Start of Monday
-            pub_before = f"{friday + timedelta(days=1)}T00:00:00Z"  # Start of Saturday
-
-            video_ids = search_youtube_videos(youtube_search, pub_after, pub_before, max_results=50)
-
-            if not video_ids:
-                print(f"[INFO] No videos found for {symbol} between {pub_after} and {pub_before}")
-                continue
-
-            for id in video_ids:
-                video_id_set.add(id)
-                video_details_dict = get_video_details(id)
-
-                if not video_details_dict:
-                    print(f"[WARNING] Failed to fetch video details for {id}")
-                    continue
-
-                symbol_folder = os.path.join(folder_path, symbol)
-                os.makedirs(symbol_folder, exist_ok=True)
-
-                transcript_path = os.path.join(symbol_folder, f"{id}.txt")
-
-                video_details_df = pd.DataFrame([{
-                    'symbol': symbol,
-                    'video_id': id,
-                    'title': video_details_dict['title'],
-                    'url': video_details_dict['url'],
-                    'transcript_path': transcript_path,
-                    'publish_date': video_details_dict['published_at']
-                }])
-
-                success, error = insert_video_into_db(video_details_df)
-
-                if success:
-                    print(f"[INFO] Successfully inserted {symbol} to raw.videos table")
-                else:
-                    print(f"[WARNING] Failed to insert {symbol}: {error}")
+            transcript_path = f"downloads/{stock}/{id}"
             
-            run_count += 1
-        else:
-            print(f"[SKIPPED] {symbol} had {len(row['headline'])} headlines — too few to run YouTube search.")
-
-    print("Function finished running!")
+            existing_video_df = all_existing_videos_info_df[all_existing_videos_info_df['video_id'] == id][['title', 'url', 'publish_date']].copy()
+            existing_video_df['symbol'] = stock
+            existing_video_df['transcript_path'] = transcript_path
 
 
+            df_lst.append(existing_video_df)
 
-def process_single_video(row_dict, output_dir):
-    try:
-        symbol = row_dict['symbol']
-        filename = row_dict['video_id']
-        url = row_dict['url']
-        id = row_dict['video_id']
-        publish_date = str(row_dict['publish_date'])
-
-        output_path = f"downloads/{symbol}"
-
-        print(f"[INFO] Currently downloading {symbol}: {id} -> {output_path}")
-
-        mp3_full_output_path = f"{download_youtube_vid_mp3(url, filename, output_path)}.mp3"
-
-        print(f"[INFO] Completed downloading {symbol}: {id} -> {output_path}")
-        print("\n")
-
-        print(f"[DEBUG] Starting transcription for {id}")
-        transcript_path = transcribe_mp3(mp3_full_output_path, output_dir)
-        print(f"[DEBUG] Finished transcription for {id}")
-
-        if os.path.exists(mp3_full_output_path):
-            # print(f"[TEST] Deleting {mp3_full_output_path}")
-            os.remove(mp3_full_output_path)
-            print(f"[INFO] Deleted: {mp3_full_output_path}")
-        else:
-            print("[ERROR] File does not exist")
-
-        sentiment_records = []
+        print(f"Already found IDs: {df_lst}")
         
-        sentences = split_into_sentences(text_path=transcript_path)
+        for id in video_to_download:
+            print(f"Registering {id} video for {stock}")
 
-        for sent in sentences:
-            sentiment_analysis = analyze_sentiment(sent)
-            print(f"[DEBUG] Sentiment result: {sentiment_analysis}")
-            sentiment_records.append({
-                'sentence': sent,
-                'stock_symbol': symbol,
-                'positive_score': sentiment_analysis['positive'],
-                'neutral_score': sentiment_analysis['neutral'],
-                'negative_score': sentiment_analysis['negative'],
-                'model_name': "FinBERT",
-                'source_type': 'Youtube',
-                'source_url': url,
-                'published_at': publish_date
-            })
+            downloaded_video_info = get_video_details(id)
 
-        sentiment_df = pd.DataFrame(sentiment_records)
-        
-        insert_stat, error = insert_sentiment_into_db(sentiment_df)
+            if downloaded_video_info:
+                print(f"Obtaining info for {stock} video {id}...")
+                transcript_path = f"downloads/{stock}/{id}"
 
-        if insert_stat:
-            save_processed_id(id)
-            return f"[INFO] Successfully inserted {symbol} video {id} into database"
-        
-    except Exception as e:
-        return f"[ERROR] Unable to insert video {id} into database. Error: {e}"
+                video_info_df = {
+                    'symbol': stock,
+                    'video_id': id,
+                    'title': downloaded_video_info['title'],
+                    'url': downloaded_video_info['url'],
+                    'transcript_path': transcript_path,
+                    'publish_date': downloaded_video_info['published_at']
+                }
 
+                video_info_df = pd.DataFrame([video_info_df])
 
-
-def download_transcribe_analyze_mp3(query_news, query_videos, output_dir, max_threads=8):
-
-    video_id_df = get_db_info(query_videos)
-    news_df = get_db_info(query_news)
-
-    futures = []
-    processed_ids = load_processed_ids()
-
-    with ThreadPoolExecutor(max_workers=max_threads) as executor:
-        for _, row in video_id_df.iterrows():
-            if row['video_id'] in processed_ids:
+                df_lst.append(video_info_df)
+                print(f"Appended video {id} info to list of DataFrames")
+            
+            else:
                 continue
-            futures.append(executor.submit(process_single_video, row.to_dict(), output_dir))
+    
+    if not df_lst:
+        print(f"[INFO] No new videos to add")
+        return False, "No new video records", None
+    
+    final_df = pd.concat(df_lst, ignore_index=True)
+
+    if final_df.empty or final_df is None:
+        return False, "Nothing to append to raw.videos"
+
+    status, error = insert_video_into_db(final_df)
+    
+    return status, error, final_df
+
+
+
+def download_and_process_videos(get_video_info_query, output_dir):
+    video_df = get_db_info(get_video_info_query)
+    url_and_path = video_df[['url', 'transcript_path']]
+
+
+    for _, row in url_and_path.iterrows():
+        stem = row['transcript_path']
+        parent_dir = os.path.dirname(row['transcript_path'])
+        mp3_transcript_path = f"{stem}/audio"
+        video_url = row['url']
+        
+        os.makedirs(parent_dir, exist_ok=True)
+
+        mp3_path = download_youtube_vid_mp3(video_url, mp3_transcript_path)
+        transcription_path = transcribe_mp3(f"{mp3_path}.mp3", stem)
+
+        print(transcription_path)
+        
+        if transcription_path and os.path.exists(transcription_path) and os.path.getsize(transcription_path) > 0:
+            os.remove(f"{mp3_path}.mp3")
+            print(f"[INFO] Successfully removed the {mp3_path}.mp3 file.")
+
 
         
-        for future in as_completed(futures):
-            try:
-                print(future.result(timeout=1200))  # Timeout after 20 minutes
-            except TimeoutError:
-                print("[TIMEOUT] A task exceeded the 20-minute limit and was killed.")
-            except Exception as e:
-                print(f"[FATAL] {row['video_id']} Future crashed with: {e}")
-    
-
-
 if __name__ == '__main__':
-    query1 = "SELECT * FROM raw.news"
-    query2 = "SELECT * FROM raw.videos"
+    news_query = """
+        SELECT * FROM raw.news WHERE symbol = 'REMX'
+    """
+    all_video_query = """
+        SELECT * FROM raw.videos
+    """
+    video_url_path_query = """
+        SELECT * FROM raw.videos WHERE symbol = 'REMX'
+    """
 
-    search_stock_video_ids(query1, 'downloads', '11-17-2025', '11-21-2025')
-    # download_transcribe_analyze_mp3(query1,  query2, "downloads/transcriptions")
+    pub_after = "2025-12-08"
+    pub_before = "2025-12-12"
+
+    output_dir = "downloads/transcriptions"
+
+    # lst_dfs = edit_raw_videos(news_query, all_video_query, pub_after, pub_before)
+    # print(lst_dfs)
+
+    download_and_process_videos(video_url_path_query, output_dir)
 

@@ -30,12 +30,26 @@ def get_sentence_sentiment(text):
 
 
 
-def get_sentiment_dataframe(query):
-    df = search_news_db(query)
+def get_inputted_source(query):
+    df = get_db_info(query)
 
-    sentiment_records = []
+    source_lst = df['source_url'].unqiue().tolist()
+
+    return source_lst
+
+
+
+def get_sentiment_dataframe(news_search_query, existing_articles_query):
+    source_lst = get_inputted_source(existing_articles_query)
+    df = search_news_db(news_search_query)
+
+    sentence_info = []
+    lst_sentences = []
 
     for _, row in df.iterrows():
+        if row['url'] in source_lst:
+            continue
+
         print(f"[INFO] Analyzing sentiment for {row['symbol']} article summary.")
         sentences = split_into_sentences(chunk=row['summary'])
         for sent in sentences:
@@ -48,15 +62,18 @@ def get_sentiment_dataframe(query):
                 'published_at': row['published_at'],
             }
 
-            sentiment_dict = analyze_sentiment(sent)
+            sentence_info.append(tmp_dict)
+            lst_sentences.append(sent)
+    
+    sentence_sentiment = analyze_sentiment(lst_sentences)
 
-            tmp_dict['positive_score'] = sentiment_dict['positive']
-            tmp_dict['neutral_score'] = sentiment_dict['neutral']
-            tmp_dict['negative_score'] = sentiment_dict['negative']
+    for i in range(len(sentence_sentiment)):
+            sentence_info[i]['positive_score'] = sentence_sentiment[i]['positive']
+            sentence_info[i]['neutral_score'] = sentence_sentiment[i]['neutral']
+            sentence_info[i]['negative_score'] = sentence_sentiment[i]['negative']
 
-            sentiment_records.append(tmp_dict)
 
-    df = pd.DataFrame(sentiment_records)
+    df = pd.DataFrame(sentence_info)
 
     return df
 
@@ -76,12 +93,20 @@ def insert_news_sentimnet_to_db(df):
 
 
 if __name__ == "__main__":
-    query = """
+    news_query = """
         SELECT
             *
         FROM raw.news
         """
-    insert_news_sentimnet_to_db(get_sentiment_dataframe(query))
+    
+    dupe_query = """
+        SELECT
+            DISTINCT url
+        FROM staging_staging.stg_sentiment
+        WHERE source_type != 'Youtube'
+        """
+
+    insert_news_sentimnet_to_db(get_sentiment_dataframe(news_query, dupe_query))
 
 
 

@@ -22,6 +22,10 @@ from scripts.configuration import (
     tech_master_symbol_set
 )
 
+from scripts.analyze_db.database_functions import (
+    get_db_info
+)
+
 load_dotenv()
 
 
@@ -44,7 +48,7 @@ def raw_news_JSON(symbol, from_date, to_date):
 
 
 
-def transform_news(news_JSON, symbol, company_name, sector):
+def transform_news(news_JSON, symbol, company_name, sector, existing_sources):
     """
     Transform a single news entry (in JSON format) into a structured Pandas DataFrame.
 
@@ -57,7 +61,9 @@ def transform_news(news_JSON, symbol, company_name, sector):
     Returns:
         pd.DataFrame: A one-row DataFrame containing cleaned and structured news data.
     """
-    info = news_JSON
+    if news_JSON['url'] in existing_sources:
+        return None
+    
     dt = datetime.fromtimestamp(news_JSON['datetime'])
     
     news_df = pd.DataFrame([{
@@ -77,7 +83,16 @@ def transform_news(news_JSON, symbol, company_name, sector):
 
 
 
-def insert_to_db(symbol, from_date, to_date):
+def get_url(query):
+    df = get_db_info(query)
+
+    inputted_news = df['url'].unique().tolist()
+
+    return inputted_news
+
+
+
+def insert_to_db(symbol, from_date, to_date, source_query):
     """
     Insert all news articles for a given symbol and date range into the Postgres database.
 
@@ -95,63 +110,128 @@ def insert_to_db(symbol, from_date, to_date):
 
     engine = create_engine(postgres_url)
 
+    rows = []
     raw_news = finnhub_news(symbol, from_date, to_date)
     company_name, sector = get_company_info(symbol)
+
+    existing_sources = set(get_url(source_query))
 
     if not raw_news:
         print(f"No news for {symbol} from {from_date} to {to_date}")
         return False
 
     for entry in raw_news:
-        news_df = transform_news(entry, symbol, company_name, sector)
-        news_df.to_sql('news', engine, schema='raw', if_exists='append', index=False)
+        df = transform_news(entry, symbol, company_name, sector, existing_sources)
+        if df is None:
+            continue
+        
+        rows.append(df)
+
+    if rows:
+        final_df = pd.concat(rows, ignore_index=True)
+        final_df.to_sql('news', engine, schema='raw', if_exists='append', index=False)
+        
+        print(f"[INFO] Inserted {len(raw_news)} rows for {symbol} from {from_date} to {to_date}")
     
-    print(f"[INFO] Inserted {len(raw_news)} rows for {symbol} from {from_date} to {to_date}")
+    else:
+        print(f"[INFO] No insertion news for {symbol} from {from_date} to {to_date} was inserted.")
 
     return True
 
 
 
-def stock_researcher(top_stocks, from_date, to_date, n):
-    queue = deque()
-    visited = set()
+# def stock_researcher(stocks, from_date, to_date, n, source_query, peer_expansion=True):
+    
+    if isinstance(stocks, str):
+        stocks = [stocks]
+
+    if peer_expansion:
+        queue = deque()
+        visited = set()
+        total = 0
+
+        for stock in stocks:
+            print(f"[INFO] Researching {stock}")
+
+            visited.add(stock)
+
+            if insert_to_db(stock, from_date, to_date, source_query):
+                total += 1
+                print(f"[INFO] Completed {stock} research")
+                print(f"[INFO] Researched {total} stocks in total")
+            else:
+                print(f"[INFO] No news for {stock}")
+
+            stock_peers = get_peers(stock)
+            for peer in stock_peers:
+                if peer not in visited and peer not in queue:
+                    queue.append(peer)
+
+        print("\n")
+        print(f"[INFO] Starting research of peer stocks...")
+        print("\n")
+
+        while queue and len(visited) < n:
+            curr_stock = queue.popleft()
+            print(f"[INFO] Researching {curr_stock}")
+
+            if insert_to_db(curr_stock, from_date, to_date, source_query):
+                visited.add(curr_stock)
+                total += 1
+                print(f"[INFO] Completed {curr_stock} research")
+                print(f"[INFO] Researched {total} stocks in total")
+            else:
+                print(f"[INFO] No news for {curr_stock}")
+
+            stock_peers = get_peers(curr_stock)
+            for peer in stock_peers:
+                if peer not in visited and peer not in queue:
+                    queue.append(peer)
+
+        print(f"[INFO] Completed research for a total of {total} stocks")
+    
+    else:
+        if insert_to_db(stocks[0], from_date, to_date, source_query):
+            print(f"[INFO] Completed {stocks[0]} research")
+        else:
+            print(f"[INFO] No news for {stocks[0]}")
+
+
+def stock_researcher(stocks, from_date, to_date, n, source_query, peer_expansion=True):
+    if isinstance(stocks, str):
+        stocks = [stocks]
+
     total = 0
 
-    for stock in top_stocks:
-        print(f"[INFO] Researching {stock}")
-
-        visited.add(stock)
-
-        if insert_to_db(stock, from_date, to_date):
-            total += 1
-            print(f"[INFO] Completed {stock} research")
+    if not peer_expansion:
+        for stock in stocks:
+            if insert_to_db(stock, from_date, to_date, source_query):
+                total += 1
             print(f"[INFO] Researched {total} stocks in total")
-        else:
-            print(f"[INFO] No news for {stock}")
+        return
 
-        stock_peers = get_peers(stock)
-        for peer in stock_peers:
-            if peer not in visited and peer not in queue and peer not in top_stocks:
+    queue = deque()
+    visited = set()
+
+    for stock in stocks:
+        visited.add(stock)
+        if insert_to_db(stock, from_date, to_date, source_query):
+            total += 1
+
+        for peer in get_peers(stock):
+            if peer not in visited and peer not in queue:
                 queue.append(peer)
 
-    print("\n")
-    print(f"[INFO] Starting research of peer stocks...")
-    print("\n")
+    print("\n[INFO] Starting research of peer stocks...\n")
 
     while queue and len(visited) < n:
         curr_stock = queue.popleft()
-        print(f"[INFO] Researching {curr_stock}")
+        visited.add(curr_stock)
 
-        if insert_to_db(curr_stock, from_date, to_date):
-            visited.add(curr_stock)
+        if insert_to_db(curr_stock, from_date, to_date, source_query):
             total += 1
-            print(f"[INFO] Completed {curr_stock} research")
-            print(f"[INFO] Researched {total} stocks in total")
-        else:
-            print(f"[INFO] No news for {curr_stock}")
 
-        stock_peers = get_peers(curr_stock)
-        for peer in stock_peers:
+        for peer in get_peers(curr_stock):
             if peer not in visited and peer not in queue:
                 queue.append(peer)
 
@@ -159,4 +239,9 @@ def stock_researcher(top_stocks, from_date, to_date, n):
 
 
 if __name__ == '__main__':
-    stock_researcher(tech_master_symbol_set, '2025-11-17', '2025-11-21', 100)
+    source_query = """
+        SELECT 
+            DISTINCT url
+        FROM raw.news
+    """
+    stock_researcher(['PLTR', 'NVDA', 'AVGO'], '2025-11-17', '2025-11-21', 100, source_query, peer_expansion=False)
