@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS raw.videos (
     title TEXT,
     url TEXT,
     transcript_path TEXT,
+    is_copy BOOLEAN NOT NULL,
     publish_date TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -36,7 +37,6 @@ CREATE TABLE IF NOT EXISTS raw.videos (
 CREATE TABLE IF NOT EXISTS raw.sentiment (
     id SERIAL PRIMARY KEY,
     sentence TEXT,
-    stock_symbol VARCHAR(10),
     positive_score FLOAT,
     neutral_score FLOAT,
     negative_score FLOAT,

@@ -33,45 +33,63 @@ def get_sentence_sentiment(text):
 def get_inputted_source(query):
     df = get_db_info(query)
 
-    source_lst = df['source_url'].unqiue().tolist()
+    source_lst = df['source_url'].unique().tolist()
 
     return source_lst
 
 
 
 def get_sentiment_dataframe(news_search_query, existing_articles_query):
-    source_lst = get_inputted_source(existing_articles_query)
+    source_set = set(get_inputted_source(existing_articles_query))
     df = search_news_db(news_search_query)
+
+    if df.empty:
+        print(f"[INFO] No news to run sentiment analysis on")
+        return df
+
+    if source_set:
+        print(f"[INFO] Separating new articles from articles that have already been processed")
+        processed_articles_mask = df['url'].apply(lambda x: x in source_set)
+        processed_articles_df = df[processed_articles_mask]
+        new_articles_df = df[~processed_articles_mask]
+    else:
+        print(f"[INFO] Ingesting into raw.sentiment for the first time")
+        new_articles_df = df
+        processed_articles_df = df.iloc[0:0]
 
     sentence_info = []
     lst_sentences = []
 
-    for _, row in df.iterrows():
-        if row['url'] in source_lst:
-            continue
+    if not processed_articles_df.empty:
+        print(f"[INFO] {processed_articles_df.shape[0]} duplicate articles")
 
-        print(f"[INFO] Analyzing sentiment for {row['symbol']} article summary.")
-        sentences = split_into_sentences(chunk=row['summary'])
-        for sent in sentences:
-            tmp_dict = {
-                'sentence': sent,
-                'stock_symbol': row['symbol'],
-                'model_name': 'FinBERT',
-                'source_type': row['source'],
-                'source_url': row['url'],
-                'published_at': row['published_at'],
-            }
 
-            sentence_info.append(tmp_dict)
-            lst_sentences.append(sent)
-    
-    sentence_sentiment = analyze_sentiment(lst_sentences)
+    print(f"[INFO] Starting sentiment analysis on {new_articles_df.shape[0]} articles")
 
-    for i in range(len(sentence_sentiment)):
-            sentence_info[i]['positive_score'] = sentence_sentiment[i]['positive']
-            sentence_info[i]['neutral_score'] = sentence_sentiment[i]['neutral']
-            sentence_info[i]['negative_score'] = sentence_sentiment[i]['negative']
+    if not new_articles_df.empty:
+        for _, row in new_articles_df.iterrows():
 
+            print(f"[INFO] Analyzing sentiment for {row['url']} article summary.")
+            sentences = split_into_sentences(chunk=row['summary'])
+            for sent in sentences:
+                tmp_dict = {
+                    'sentence': sent,
+                    'model_name': 'FinBERT',
+                    'source_type': row['source'],
+                    'source_url': row['url'],
+                    'published_at': row['published_at'],
+                }
+
+                sentence_info.append(tmp_dict)
+                lst_sentences.append(sent)
+        
+        sentence_sentiment = analyze_sentiment(lst_sentences)
+        
+        for info, sentiment in zip(sentence_info, sentence_sentiment):
+            info['positive_score'] = sentiment['positive']
+            info['neutral_score'] = sentiment['neutral']
+            info['negative_score'] = sentiment['negative']
+        
 
     df = pd.DataFrame(sentence_info)
 
@@ -79,13 +97,19 @@ def get_sentiment_dataframe(news_search_query, existing_articles_query):
 
 
 
-def insert_news_sentimnet_to_db(df):
-    print(f"Inserting news article sentiment DataFrame into raw.sentiment")
+def insert_news_sentiment_to_db(df):
+    if df.empty:
+        print(f"[INFO] Empty news dataframe. Ending news sentiment analysis function")
+        return
+
+    print(f"[INFO] Inserting news article sentiment DataFrame into raw.sentiment")
 
     status, error = insert_sentiment_into_db(df)
 
-    if status:
+    if status and error != 'Empty':
         print(f"[INFO] Successfully inserted news article sentiment into raw.sentiment.")
+    elif status and error == 'Empty':
+        print(f"[INFO] No news article sentiment inserted due to no news in raw.news.")
     else:
         print(f"[ERROR] Failed to insert news article sentiment into raw.sentiment.")
         print(f"[ERROR] Error: {error}")
@@ -101,12 +125,12 @@ if __name__ == "__main__":
     
     dupe_query = """
         SELECT
-            DISTINCT url
-        FROM staging_staging.stg_sentiment
+            DISTINCT source_url
+        FROM raw.sentiment
         WHERE source_type != 'Youtube'
         """
 
-    insert_news_sentimnet_to_db(get_sentiment_dataframe(news_query, dupe_query))
+    insert_news_sentiment_to_db(get_sentiment_dataframe(news_query, dupe_query))
 
 
 

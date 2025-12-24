@@ -61,7 +61,11 @@ def transform_news(news_JSON, symbol, company_name, sector, existing_sources):
     Returns:
         pd.DataFrame: A one-row DataFrame containing cleaned and structured news data.
     """
-    if news_JSON['url'] in existing_sources:
+    if not existing_sources:
+        print(f"[INFO] No existing news articles for {symbol}")
+
+    elif news_JSON['url'] in existing_sources:
+        print(f"[INFO] News article already exists.")
         return None
     
     dt = datetime.fromtimestamp(news_JSON['datetime'])
@@ -122,7 +126,8 @@ def insert_to_db(symbol, from_date, to_date, source_query):
 
     for entry in raw_news:
         df = transform_news(entry, symbol, company_name, sector, existing_sources)
-        if df is None:
+        if df is None or df['summary'].isna().iloc[0] or not df['summary'].iloc[0].strip():
+            print(f"[INFO] The article is missing the summary required for sentiment analysis")
             continue
         
         rows.append(df)
@@ -244,4 +249,4 @@ if __name__ == '__main__':
             DISTINCT url
         FROM raw.news
     """
-    stock_researcher(['PLTR', 'NVDA', 'AVGO'], '2025-11-17', '2025-11-21', 100, source_query, peer_expansion=False)
+    stock_researcher(['NVDA', 'CRWV', 'GOOGL'], '2025-12-15', '2025-12-19', 100, source_query, peer_expansion=False)

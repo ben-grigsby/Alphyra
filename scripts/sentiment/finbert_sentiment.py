@@ -8,45 +8,50 @@ from scripts.transcriptions.text_chunking_functions import split_into_sentences
 
 
 labels = ['neutral', 'positive', 'negative']
+tokenizer = AutoTokenizer.from_pretrained('yiyanghkust/finbert-tone')
+model = AutoModelForSequenceClassification.from_pretrained('yiyanghkust/finbert-tone')
 
-def analyze_sentiment(tokenizer, model, text):
-    """
-    Accepts:
-      - A single string
-      - A list of strings
-    
-    Returns:
-      - A dict for a single string
-      - A list of dicts for multiple strings
-    """
+model.eval()
 
-    # Normalize input → always a list
+
+
+def analyze_sentiment(text, tokenizer=tokenizer, model=model):
+    print("STARTING SENTIMENT ANALYSIS FUNCTION.")
+
     is_single = False
     if isinstance(text, str):
         text = [text]
         is_single = True
 
-    # Tokenize batch
+    print("Tokenizing input")
+
     inputs = tokenizer(
         text,
-        return_tensors='pt',
+        return_tensors="pt",
         truncation=True,
         padding=True,
         max_length=512
     )
 
-    # Run through model
-    outputs = model(**inputs)
+    inputs = {k: v.to("cpu") for k, v in inputs.items()}
 
-    # Softmax across sentiment dimension
-    probs = softmax(outputs.logits, dim=1).detach().numpy()
-    # shape: (batch, 3)
+    print("Running model (inference mode)")
 
-    results = []
-    for row in probs:
-        results.append({label: float(score) for label, score in zip(labels, row)})
+    with torch.no_grad():                    # ← REQUIRED
+        outputs = model(**inputs)
 
-    # Return single dictionary OR list of dictionaries depending on input
+    print("Calculating softmax")
+
+    probs = softmax(outputs.logits, dim=1).cpu().numpy()
+
+    results = [
+        {label: float(score) for label, score in zip(labels, row)}
+        for row in probs
+    ]
+
+    if not text:
+        return []
+
     return results[0] if is_single else results
 
 
