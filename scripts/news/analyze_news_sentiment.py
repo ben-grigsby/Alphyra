@@ -18,6 +18,19 @@ def search_news_db(query):
 
 
 def get_sentence_sentiment(text):
+    """
+    Search YouTube for videos matching a query within a specified date range.
+
+    Parameters
+    ----------
+    text : list
+        A list of sentences that will be inserted into the NLP sentiment analysis function
+
+    Returns
+    -------
+    list of dict
+        A list of dictionaries with the index corresponding to each 
+    """
     sentences = split_into_sentences(chunk=text)
     
     lst_dicts = []

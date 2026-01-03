@@ -92,6 +92,8 @@ def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
         new_videos_set = stock_video_ids_set - processed_videos_id_set
         duplicate_videos_set = stock_video_ids_set & processed_videos_id_set
 
+        df_lst = []
+
 
         for video_id in new_videos_set:
             print(f"[INFO] Registering {video_id} for {stock}")
@@ -114,6 +116,23 @@ def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
                 }
 
                 processed_videos_id_set.add(video_id)
+
+                df_lst.append(video_info_df)
+                processed_videos_df = pd.concat([processed_videos_df, video_info_df], ignore_index=True)
+
+                print(f"[INFO] Appended {video_id} info for {stock} to df_lst")
+            
+            else:
+                print(f"[ERROR] An error occurred when attempting to download {video_id} for {stock}")
+                continue
+
+        
+        for video_id in duplicate_videos_set:
+            print(f"[INFO] Copying {video_id} to {stock}")
+
+            transcript_path = f"downloads/{stock}/{video_id}"
+
+            video_info = processed_videos_df[processed_videos_df['video_id'] == video_id].iloc[[0]].copy()
 
 
 
