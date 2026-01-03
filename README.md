@@ -29,7 +29,7 @@ The end goal is to create a sentiment foundation that can support:
 
 ---
 
-## Data Architecture Diagram
+## Data Architecture Diagram (work in progress)
 
 ![System Architecture Diagram](docs/data_architecture_diagram.drawio.png)
 
