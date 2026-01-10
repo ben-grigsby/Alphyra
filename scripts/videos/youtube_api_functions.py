@@ -43,6 +43,11 @@ def search_youtube_videos(query, pub_after, pub_before, max_results=5):
     }
 
     response = requests.get(url, params=params)
+
+    print(f"[YOUTUBE API] Status: {response.status_code}")
+    if response.status_code != 200:
+        print(f"[YOUTUBE API] Error response: {response.text}")
+
     data = response.json()
 
     # print(f"[DEBUG] API status: {response.status_code}")

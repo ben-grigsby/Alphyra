@@ -55,7 +55,7 @@ from scripts.sentiment.finbert_sentiment import (
 
 
 
-def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
+def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before, BATCH_SIZE=100):
     print("Starting video search and download function...")
 
     pub_after = f"{pub_after}T00:00:00Z"
@@ -78,6 +78,8 @@ def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
 
     processed_videos_id_set = {t[1] for t in processed_videos_tuple_set}
 
+    buffer = []
+
     for stock in stocks_from_raw_news_set:
         print(f"Beginning {stock} video search for time interval {pub_after} - {pub_before}...")
 
@@ -92,170 +94,218 @@ def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
         new_videos_set = stock_video_ids_set - processed_videos_id_set
         duplicate_videos_set = stock_video_ids_set & processed_videos_id_set
 
-        df_lst = []
+
+        if new_videos_set:
+            for video_id in new_videos_set:
+                print(f"[INFO] Registering {video_id} for {stock}")
+
+                downloaded_video_info = get_video_details(video_id)
+
+                if downloaded_video_info:
+                    print(f"Obtaining video info for {stock} video {video_id}...")
+
+                    transcript_path = f"downloads/{stock}/{video_id}"
+
+                    video_info_dict = {
+                        'symbol': stock,
+                        'video_id': video_id,
+                        'title': downloaded_video_info['title'],
+                        'url': downloaded_video_info['url'],
+                        'transcript_path': transcript_path,
+                        'publish_date': downloaded_video_info['published_at'],
+                        'is_copy': False
+                    }
 
 
-        for video_id in new_videos_set:
-            print(f"[INFO] Registering {video_id} for {stock}")
+                    processed_videos_id_set.add(video_id)
 
-            downloaded_video_info = get_video_details(video_id)
+                    processed_videos_df = pd.concat(
+                        [processed_videos_df, pd.DataFrame([video_info_dict])],
+                        ignore_index=True
+                    )
 
-            if downloaded_video_info:
-                print(f"Obtaining video info for {stock} video {video_id}...")
+                    buffer.append(video_info_dict)
 
-                transcript_path = f"downloads/{stock}/{id}"
-
-                video_info_df = {
-                    'symbol': stock,
-                    'video_id': video_id,
-                    'title': downloaded_video_info['title'],
-                    'url': downloaded_video_info['url'],
-                    'transcript_path': transcript_path,
-                    'publish_date': downloaded_video_info['published_at'],
-                    'is_copy': False
-                }
-
-                processed_videos_id_set.add(video_id)
-
-                df_lst.append(video_info_df)
-                processed_videos_df = pd.concat([processed_videos_df, video_info_df], ignore_index=True)
-
-                print(f"[INFO] Appended {video_id} info for {stock} to df_lst")
-            
-            else:
-                print(f"[ERROR] An error occurred when attempting to download {video_id} for {stock}")
-                continue
-
-        
-        for video_id in duplicate_videos_set:
-            print(f"[INFO] Copying {video_id} to {stock}")
-
-            transcript_path = f"downloads/{stock}/{video_id}"
-
-            video_info = processed_videos_df[processed_videos_df['video_id'] == video_id].iloc[[0]].copy()
-
-
-
-def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
-    print("Starting video search and download function...")
-
-    pub_after = f"{pub_after}T00:00:00Z"
-    pub_before = f"{pub_before}T23:59:59Z"
-
-    existing_news_stocks = set(get_db_info(news_db_query)['symbol'].unique().tolist())
-    all_existing_videos_info_df = get_db_info(video_df_query)
-    existing_stock_video_tuple = set(
-        tuple(x)
-        for x in all_existing_videos_info_df[['symbol', 'video_id']].copy().itertuples(index=False)
-    )
-    existing_video_ids = {t[1] for t in existing_stock_video_tuple}
-
-    df_lst = []
-    lookup_df = []
-
-    print(existing_news_stocks)
-
-    for stock in existing_news_stocks:
-
-        search_query = f"{stock} stock analysis"
-        stock_video_ids_lst = search_youtube_videos(search_query, pub_after, pub_before)
-
-        if not stock_video_ids_lst:
-            print(f"No videos for {stock} from {pub_after} to {pub_before}, moving on...")
-            continue
-
-        symbol_id_zip = {(stock, id) for id in stock_video_ids_lst}
-        new_video_ids = symbol_id_zip - existing_stock_video_tuple
-
-        video_to_copy = {t[1] for t in new_video_ids if t[1] in existing_video_ids}
-        video_to_download = {t[1] for t in new_video_ids if t[1] not in existing_video_ids}
-
-        print(symbol_id_zip)
-
-        for id in video_to_download:
-            print(f"Registering {id} video for {stock}")
-
-            downloaded_video_info = get_video_details(id)
-
-            if downloaded_video_info:
-                print(f"Obtaining info for {stock} video {id}...")
-                transcript_path = f"downloads/{stock}/{id}"
-
-                video_info_df = {
-                    'symbol': stock,
-                    'video_id': id,
-                    'title': downloaded_video_info['title'],
-                    'url': downloaded_video_info['url'],
-                    'transcript_path': transcript_path,
-                    'publish_date': downloaded_video_info['published_at'],
-                    'is_copy': False
-                }
-
-                video_info_df = pd.DataFrame([video_info_df])
-
-                df_lst.append(video_info_df)
-                lookup_df.append(video_info_df)
-                print(f"Appended video {id} info to list of DataFrames")
-
-                existing_video_ids.add(id)
-                existing_stock_video_tuple.add((stock, id))
-            
-            else:
-                continue
-
-        
-    if lookup_df:
-        videos_to_download_df = pd.concat(lookup_df, ignore_index=True)
-    else:
-        videos_to_download_df = pd.DataFrame(columns=['video_id', 'title', 'url', 'publish_date'])
-
-
-    for id in video_to_copy:
-        print(f"Copying video id to be assigned to {stock}...")
-
-        transcript_path = f"downloads/{stock}/{id}"
-
-        if id in set(videos_to_download_df['video_id'].unique().tolist()):
-            df_with_id = videos_to_download_df
-        elif id in set(all_existing_videos_info_df['video_id'].unique().tolist()):
-            df_with_id = all_existing_videos_info_df
+                    print(f"[INFO] Appended {video_id} info for {stock} to df_lst")
+                
+                else:
+                    print(f"[ERROR] An error occurred when attempting to download {video_id} for {stock}")
+                    continue
         else:
-            print(f"[WARN] No metadata found for video {id}, skipping copy")
-            continue
+            print(f"[INFO] No new videos for {stock}")
+
         
-        existing_video_df = (
-            df_with_id
-            .loc[df_with_id['video_id'] == id, ['title', 'url', 'publish_date']]
-            .iloc[[0]]
-            .copy()
-        )
+        if duplicate_videos_set:
+            for video_id in duplicate_videos_set:
+                print(f"[INFO] Copying {video_id} to {stock}")
 
-        existing_video_df['video_id'] = id
-        existing_video_df['symbol'] = stock
-        existing_video_df['transcript_path'] = transcript_path
-        existing_video_df['is_copy'] = True
+                transcript_path = f"downloads/{stock}/{video_id}"
+
+                video_info = processed_videos_df[processed_videos_df['video_id'] == video_id].iloc[[0]].copy()
+                video_row = video_info.iloc[0]
+
+                if not video_info.empty:
+                    repeated_video_df = {
+                        "symbol": stock,
+                        "video_id": video_row['video_id'],
+                        "title": video_row['title'],
+                        "url": video_row['url'],
+                        "transcript_path": transcript_path,
+                        "publish_date": video_row['publish_date'],
+                        "is_copy": True
+                    }
+
+                    buffer.append(repeated_video_df)
+
+                    print(f"[INFO] Appended {video_row['video_id']} info for {stock} to df_lst")
+        
+        if len(buffer) >= 100:
+            buffer_df = pd.DataFrame(buffer)
+            print(f"[INFO] Buffer dataframe has exceeded batch limit of {BATCH_SIZE}...appending buffer to SQL table")
+            status, message = insert_video_into_db(buffer_df)
+
+            if status:
+                print(f"[INFO] Buffer dataframe has been appended to raw.videos")
+                print(f"[INFO] Preparing to cleanup buffer dataframe")
+
+                buffer = []
+            else:
+                print(f"[ERROR] An error occurred when appending the buffer dataframe to raw.videos...")
+                print(f"[ERROR]    {message}")
+
+        else:
+            print(f"[INFO] No repeated videos for {stock}")
+    
+    if buffer:
+        buffer_df = pd.DataFrame(buffer)
+        print("[INFO] Flushing remaining buffer to raw.videos")
+        status, message = insert_video_into_db(buffer_df)
+
+        if status:
+            print(f"[INFO] Successfully appended remaining buffer videos to raw.videos")
+
+        else:
+            print(f"[ERROR] An error occurred when appending the remaining buffer videos to raw.videos...")
+            print(f"[ERROR]    {message}")
 
 
-        df_lst.append(existing_video_df)
+# def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before):
+#     print("Starting video search and download function...")
 
-        existing_video_ids.add(id)
-        existing_stock_video_tuple.add((stock, id))
+#     pub_after = f"{pub_after}T00:00:00Z"
+#     pub_before = f"{pub_before}T23:59:59Z"
 
-        print(f"[INFO] Copied {len(video_to_copy)} existing videos for {stock}")
+#     existing_news_stocks = set(get_db_info(news_db_query)['symbol'].unique().tolist())
+#     all_existing_videos_info_df = get_db_info(video_df_query)
+#     existing_stock_video_tuple = set(
+#         tuple(x)
+#         for x in all_existing_videos_info_df[['symbol', 'video_id']].copy().itertuples(index=False)
+#     )
+#     existing_video_ids = {t[1] for t in existing_stock_video_tuple}
+
+#     df_lst = []
+#     lookup_df = []
+
+#     for stock in existing_news_stocks:
+
+#         search_query = f"{stock} stock analysis"
+#         stock_video_ids_lst = search_youtube_videos(search_query, pub_after, pub_before)
+
+#         if not stock_video_ids_lst:
+#             print(f"No videos for {stock} from {pub_after} to {pub_before}, moving on...")
+#             continue
+
+#         symbol_id_zip = {(stock, id) for id in stock_video_ids_lst}
+#         new_video_ids = symbol_id_zip - existing_stock_video_tuple
+
+#         video_to_copy = {t[1] for t in new_video_ids if t[1] in existing_video_ids}
+#         video_to_download = {t[1] for t in new_video_ids if t[1] not in existing_video_ids}
+
+#         for id in video_to_download:
+#             print(f"Registering {id} video for {stock}")
+
+#             downloaded_video_info = get_video_details(id)
+
+#             if downloaded_video_info:
+#                 print(f"Obtaining info for {stock} video {id}...")
+#                 transcript_path = f"downloads/{stock}/{id}"
+
+#                 video_info_df = {
+#                     'symbol': stock,
+#                     'video_id': id,
+#                     'title': downloaded_video_info['title'],
+#                     'url': downloaded_video_info['url'],
+#                     'transcript_path': transcript_path,
+#                     'publish_date': downloaded_video_info['published_at'],
+#                     'is_copy': False
+#                 }
+
+#                 video_info_df = pd.DataFrame([video_info_df])
+
+#                 df_lst.append(video_info_df)
+#                 lookup_df.append(video_info_df)
+#                 print(f"Appended video {id} info to list of DataFrames")
+
+#                 existing_video_ids.add(id)
+#                 existing_stock_video_tuple.add((stock, id))
+            
+#             else:
+#                 print(f"[INFO] No videos for {stock} from {pub_after} - {pub_before}")
+#                 continue
+
+        
+#     if lookup_df:
+#         videos_to_download_df = pd.concat(lookup_df, ignore_index=True)
+#     else:
+#         videos_to_download_df = pd.DataFrame(columns=['video_id', 'title', 'url', 'publish_date'])
+
+
+#     for id in video_to_copy:
+#         print(f"Copying video id to be assigned to {stock}...")
+
+#         transcript_path = f"downloads/{stock}/{id}"
+
+#         if id in set(videos_to_download_df['video_id'].unique().tolist()):
+#             df_with_id = videos_to_download_df
+#         elif id in set(all_existing_videos_info_df['video_id'].unique().tolist()):
+#             df_with_id = all_existing_videos_info_df
+#         else:
+#             print(f"[WARN] No metadata found for video {id}, skipping copy")
+#             continue
+        
+#         existing_video_df = (
+#             df_with_id
+#             .loc[df_with_id['video_id'] == id, ['title', 'url', 'publish_date']]
+#             .iloc[[0]]
+#             .copy()
+#         )
+
+#         existing_video_df['video_id'] = id
+#         existing_video_df['symbol'] = stock
+#         existing_video_df['transcript_path'] = transcript_path
+#         existing_video_df['is_copy'] = True
+
+
+#         df_lst.append(existing_video_df)
+
+#         existing_video_ids.add(id)
+#         existing_stock_video_tuple.add((stock, id))
+
+#         print(f"[INFO] Copied {len(video_to_copy)} existing videos for {stock}")
 
     
-    if not df_lst:
-        print(f"[INFO] No new videos to add")
-        return False, "No new video records", None
+#     if not df_lst:
+#         print(f"[INFO] No new videos to add")
+#         return False, "No new video records", None
     
-    final_df = pd.concat(df_lst, ignore_index=True)
+#     final_df = pd.concat(df_lst, ignore_index=True)
 
-    if final_df.empty or final_df is None:
-        return False, "Nothing to append to raw.videos"
+#     if final_df.empty or final_df is None:
+#         return False, "Nothing to append to raw.videos"
 
-    status, error = insert_video_into_db(final_df)
+#     status, error = insert_video_into_db(final_df)
     
-    return status, error, final_df
+#     return status, error, final_df
 
 
 

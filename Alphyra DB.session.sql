@@ -18,4 +18,4 @@
 
 -- SELECT * FROM raw.news WHERE url = 'https://finnhub.io/api/news?id=e3da97c6748721eec27e9329314b3e45dc983f59c02dba4b13ed671232ee86fe'
 
-SELECT * FROM raw.news
+SELECT * FROM raw.videos
