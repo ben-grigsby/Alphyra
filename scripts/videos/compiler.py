@@ -339,7 +339,6 @@ def compiler(news_db_query, video_df_query, pub_after, pub_before, get_video_inf
 
 
 
-
 def temp_insert_sentiment(df):
 
     df['stock_symbol'] = 'REMX'
@@ -385,7 +384,7 @@ if __name__ == '__main__':
 
     video_df = download_and_process_videos(video_url_path_query, analyzed_videos_query, 5)
 
-    # print(video_df)
+    print(video_df)
 
     # print("FINAL OUTPUT: ")
     # print(video_df.head())
