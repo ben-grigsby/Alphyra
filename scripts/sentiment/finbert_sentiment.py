@@ -51,16 +51,19 @@ def analyze_sentiment(text, tokenizer=tokenizer, model=model):
     """
     
     print("STARTING SENTIMENT ANALYSIS FUNCTION.")
+    # print(f"[DEBUG] testing sequence: {text[0]}")
 
     is_single = False
     if isinstance(text, str):
         text = [text]
         is_single = True
+
     
 
     text = [s for s in text if s and s.strip()]
     if not text:
         return []
+
 
     try:
         print("Tokenizing input")

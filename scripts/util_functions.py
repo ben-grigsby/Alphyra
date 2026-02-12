@@ -32,3 +32,11 @@ def load_processed_ids(path="data/processed_videos.txt"):
         with open(path, "r") as f:
             return set(line.strip() for line in f)
     return set()
+
+
+
+def val_in_list_mask_df(df, col, lst):
+    df_mask = df[col].apply(lambda x: x in lst)
+    new_df = df[df_mask]
+
+    return new_df

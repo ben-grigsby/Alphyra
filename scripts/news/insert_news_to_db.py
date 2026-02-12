@@ -203,6 +203,56 @@ def insert_to_db(symbol, from_date, to_date, source_query):
 
 
 def stock_researcher(stocks, from_date, to_date, n, source_query, peer_expansion=True):
+    """
+    Orchestrate stock-level news research with optional peer expansion.
+
+    This function performs news ingestion for a set of stock symbols over a
+    specified date range. When peer expansion is enabled, it recursively
+    explores related peer companies using a breadth-first search (BFS)
+    strategy, up to a maximum number of unique stocks.
+
+    The function tracks visited stocks to prevent duplicate processing and
+    inserts retrieved data into the database via `insert_to_db`.
+
+    Parameters
+    ----------
+    stocks : str or list of str
+        One or more stock ticker symbols to initiate the research process.
+        If a single string is provided, it will be converted to a list.
+
+    from_date : str
+        Start date for news retrieval in YYYY-MM-DD format.
+
+    to_date : str
+        End date for news retrieval in YYYY-MM-DD format.
+
+    n : int
+        Maximum number of unique stocks to research when peer expansion
+        is enabled. Ignored if `peer_expansion` is False.
+
+    source_query : str
+        SQL query or identifier used to check for existing data and
+        prevent duplicate ingestion.
+
+    peer_expansion : bool, optional
+        Whether to expand research to peer companies recursively.
+        Defaults to True.
+
+    Returns
+    -------
+    None
+        Progress and results are logged to stdout. Insert success is tracked
+        internally but not returned.
+
+    Notes
+    -----
+    - Uses a breadth-first search (BFS) traversal when expanding peers.
+    - Ensures each stock is researched at most once.
+    - The actual data retrieval and persistence logic is delegated to
+      `insert_to_db` and `get_peers`.
+    - Designed for controlled exploration rather than exhaustive graph traversal.
+    """
+
     if isinstance(stocks, str):
         stocks = [stocks]
 
@@ -249,4 +299,4 @@ if __name__ == '__main__':
             DISTINCT url
         FROM raw.news
     """
-    stock_researcher(['NVDA', 'CRWV', 'GOOGL'], '2025-12-15', '2025-12-19', 100, source_query, peer_expansion=False)
+    stock_researcher(['NVDA', 'CRWV', 'PLTR', 'AMZN', 'HL'], '2026-02-02', '2026-02-06', 100, source_query, peer_expansion=False)

@@ -14,7 +14,7 @@ def finnhub_news(symbol, from_date, to_date):
     if res.status_code == 200:
         return res.json()
     else:
-        print(f"Error fetching news: {res.status_code}")
+        print(f"[ERROR] Error fetching news: {res.status_code}")
         return []
 
 
@@ -32,17 +32,17 @@ def get_peers(symbol):
 
 
 if __name__ == '__main__':
-    symbol = 'AAPL'
-    from_date = '2025-05-16'
-    to_date = '2025-06-03'
+    symbol = 'PLTR'
+    from_date = '2025-01-01'
+    to_date = '2025-01-20'
 
-    # news = finnhub_news(symbol, from_date, to_date)
+    news = finnhub_news(symbol, from_date, to_date)
 
     # if news:
     #     print(news[0])  # Print first article
     # else:
     #     print("No news found.")
 
-    peers = get_peers(symbol)
+    # peers = get_peers(symbol)
 
-    print(peers)
+    # print(peers)
