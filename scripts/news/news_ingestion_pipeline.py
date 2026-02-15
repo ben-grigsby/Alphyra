@@ -14,7 +14,7 @@ from scripts.news.download_news import (
     get_peers
 )
 
-from scripts.company_info.download_company_info import (
+from scripts.company_info.company_info_ingestion_pipeline import (
     get_company_info
 )
 
@@ -299,4 +299,4 @@ if __name__ == '__main__':
             DISTINCT url
         FROM raw.news
     """
-    stock_researcher(['NVDA', 'CRWV', 'PLTR', 'AMZN', 'HL'], '2026-02-02', '2026-02-06', 100, source_query, peer_expansion=False)
+    stock_researcher(['NVDA', 'CRWV', 'PLTR', 'GOOGL', 'HL'], '2026-02-02', '2026-02-06', 100, source_query, peer_expansion=False)

@@ -140,10 +140,11 @@ if __name__ == "__main__":
         SELECT
             DISTINCT source_url
         FROM raw.sentiment
-        WHERE source_type != 'Youtube'
+        WHERE source_type != 'Video'
         """
 
     insert_news_sentiment_to_db(get_sentiment_dataframe(news_query, dupe_query))
+
 
 
 

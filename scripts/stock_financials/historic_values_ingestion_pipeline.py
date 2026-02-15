@@ -247,4 +247,4 @@ def fill_stock_values(retrieve_all_stocks_query, interval="1Day", stock=None):
 if __name__ == '__main__':
     query = "SELECT DISTINCT symbol FROM raw.news"
 
-    fill_stock_values(query, stock=['HL'])
+    fill_stock_values(query)

@@ -56,7 +56,7 @@ from scripts.sentiment.finbert_sentiment import (
 
 
 
-def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before, BATCH_SIZE=100):
+def acquire_video_information(news_db_query, video_df_query, pub_after, pub_before, BATCH_SIZE=100):
     print("Starting video search and download function...")
 
     pub_after = f"{pub_after}T00:00:00Z"
@@ -192,6 +192,30 @@ def edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before, BATCH_
 
 
 def download_transcribe_video(row):
+    """
+    Downloads audio for a single video and generates its transcript.
+
+    Parameters
+    ----------
+    row : pandas.Series
+        Row from raw.videos DataFrame containing:
+            - transcript_path
+            - url
+
+    Returns
+    -------
+    str or None
+        Path to generated transcript file if successful.
+        None if download or transcription fails.
+
+    Side Effects
+    ------------
+    - Creates transcript directory if it does not exist.
+    - Downloads YouTube audio (.mp3).
+    - Runs transcription process.
+    - Deletes audio file after successful transcription.
+    """
+    
     stem = row['transcript_path']
     mp3_transcription_path = os.path.join(stem, "audio")
     video_url = row['url']
@@ -262,6 +286,50 @@ def combine_sentence_sentiment(video_text_path):
 
 
 def download_and_process_videos(get_video_info_query, analyzed_videos_query, buffer_max):
+    """
+    End-to-end video ingestion and sentiment processing pipeline.
+
+    This function:
+        1. Retrieves raw video metadata from the database.
+        2. Identifies videos that have not yet been sentiment-analyzed
+           (based on source_url presence in raw.sentiment).
+        3. Downloads and transcribes each new video.
+        4. Performs sentence-level sentiment analysis using FinnBert.
+        5. Buffers results and batch-inserts them into the raw.sentiment table.
+
+    Parameters
+    ----------
+    get_video_info_query : str
+        SQL query that returns video metadata from raw.videos.
+        Must include columns:
+            - url
+            - transcript_path
+            - publish_date
+            - is_copy
+
+    analyzed_videos_query : str
+        SQL query that returns existing analyzed source URLs from raw.sentiment.
+        Must include column:
+            - source_url
+
+    buffer_max : int
+        Maximum number of video sentiment DataFrames to accumulate
+        before batch inserting into the database.
+
+    Behavior
+    --------
+    - Ensures idempotency by skipping videos whose URLs already exist
+      in raw.sentiment.
+    - Uses batched inserts for performance.
+    - Flushes any remaining buffered sentiment rows after loop completion.
+    - Logs processing steps and errors.
+
+    Notes
+    -----
+    - Deduplication is currently based only on source_url.
+      Future model-versioning may require (source_url, model_name) dedup keys.
+    - Buffer size is based on number of processed videos, not total sentiment rows.
+    """
 
     raw_videos_df = get_db_info(get_video_info_query)
     analyzed_videos_df = get_db_info(analyzed_videos_query)
@@ -320,7 +388,7 @@ def download_and_process_videos(get_video_info_query, analyzed_videos_query, buf
 
 
 def compiler(news_db_query, video_df_query, pub_after, pub_before, get_video_info_query):
-    video_search_status, video_search_error, video_search_df = edit_raw_videos(news_db_query, video_df_query, pub_after, pub_before)
+    video_search_status, video_search_error, video_search_df = acquire_video_information(news_db_query, video_df_query, pub_after, pub_before)
 
     if video_search_status and video_search_error == None and not video_search_df.empty:
         print(f"[INFO] Successfully updated raw.videos dataframe to include new stock videos from {pub_after} to {pub_before}")
@@ -381,7 +449,7 @@ if __name__ == '__main__':
     # sentiment_df = combine_sentence_sentiment(transcript_path)
 
     # print(sentiment_df.head())
-
+    acquire_video_information(news_query, all_video_query, pub_after, pub_before)
     video_df = download_and_process_videos(video_url_path_query, analyzed_videos_query, 5)
 
     print(video_df)
