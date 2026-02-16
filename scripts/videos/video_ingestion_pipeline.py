@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import hashlib
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -107,8 +108,12 @@ def acquire_video_information(news_db_query, video_df_query, pub_after, pub_befo
 
                     transcript_path = f"downloads/{video_id}"
 
+                    normalized_url = downloaded_video_info['url'].strip().lower()
+                    content_id = hashlib.md5(normalized_url.encode()).hexdigest()
+
                     video_info_dict = {
                         'symbol': stock,
+                        'content_id': content_id,
                         'video_id': video_id,
                         'title': downloaded_video_info['title'],
                         'url': downloaded_video_info['url'],
@@ -147,6 +152,7 @@ def acquire_video_information(news_db_query, video_df_query, pub_after, pub_befo
 
                 if not video_info.empty:
                     repeated_video_df = {
+                        "content_id": video_row['content_id'],
                         "symbol": stock,
                         "video_id": video_row['video_id'],
                         "title": video_row['title'],
@@ -348,12 +354,14 @@ def download_and_process_videos(get_video_info_query, analyzed_videos_query, buf
     for _, row in original_new_videos_df.iterrows():
         video_transcription_path = download_transcribe_video(row)
         if video_transcription_path:
+
             print(f"[INFO] Accessing {video_transcription_path}")
             video_sentiment_df = combine_sentence_sentiment(video_transcription_path)
             video_sentiment_df['model_name'] = 'FinnBert'
             video_sentiment_df['source_type'] = 'Video'
             video_sentiment_df['source_url'] = row['url']
             video_sentiment_df['published_at'] = row['publish_date']
+            video_sentiment_df['content_id'] = row['content_id']
 
             buffer.append(video_sentiment_df)
 

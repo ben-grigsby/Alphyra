@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import json
 import random
+import hashlib
 
 from sqlalchemy import create_engine
 from sqlalchemy.dialects.postgresql import insert
@@ -12,6 +13,11 @@ from datetime import datetime
 from scripts.news.download_news import (
     finnhub_news,
     get_peers
+)
+
+from scripts.news.analyze_news_sentiment import (
+    insert_news_sentiment_to_db,
+    get_sentiment_dataframe
 )
 
 from scripts.company_info.company_info_ingestion_pipeline import (
@@ -69,8 +75,12 @@ def transform_news(news_JSON, symbol, company_name, sector, existing_sources):
         return None
     
     dt = datetime.fromtimestamp(news_JSON['datetime'])
+
+    normalized_url = news_JSON['url'].strip().lower()
+    content_id = hashlib.md5(normalized_url.encode()).hexdigest()
     
     news_df = pd.DataFrame([{
+        'content_id': content_id,
         'company_name': company_name,
         'sector': sector,
         'symbol': symbol,
@@ -300,3 +310,18 @@ if __name__ == '__main__':
         FROM raw.news
     """
     stock_researcher(['NVDA', 'CRWV', 'PLTR', 'GOOGL', 'HL'], '2026-02-02', '2026-02-06', 100, source_query, peer_expansion=False)
+
+    news_query = """
+        SELECT 
+            *
+        FROM raw.news
+    """
+
+    dupe_query = """
+        SELECT
+            DISTINCT source_url
+        FROM raw.sentiment
+        WHERE source_type != 'Video'
+    """
+
+    insert_news_sentiment_to_db(get_sentiment_dataframe(news_query, dupe_query))

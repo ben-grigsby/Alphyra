@@ -86,6 +86,7 @@ def get_sentiment_dataframe(news_search_query, existing_articles_query):
             sentences = split_into_sentences(chunk=row['summary'])
             for sent in sentences:
                 tmp_dict = {
+                    'content_id': row['content_id'],
                     'sentence': sent,
                     'model_name': 'FinBERT',
                     'source_type': row['source'],
