@@ -10,7 +10,7 @@ load_dotenv()
 FINNHUB_API = os.getenv("FINNHUB_API_KEY")
 
 from scripts.company_info.sec_filings_analysis import (
-    extract_shares_outstanding,
+    get_company_profile,
     extract_company_valuations,
     metric_period
 )
@@ -38,10 +38,10 @@ def get_company_info(symbol):
 
 
 def get_company_financial_info(symbol):
-    sec_url = f"https://finnhub.io/api/v1/stock/financials-reported?symbol={symbol}&freq=annual&token={FINNHUB_API}"
+    company_profile_url = f"https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token={FINNHUB_API}"
     comp_fin_url = f"https://finnhub.io/api/v1/stock/metric?symbol={symbol}&metric=all&token={FINNHUB_API}"
 
-    shares_outstanding, filed_date, fiscal_year = extract_shares_outstanding(sec_url)
+    company_profile = get_company_profile(company_profile_url)
     metric_dict = extract_company_valuations(comp_fin_url)
 
     records = [
@@ -51,7 +51,7 @@ def get_company_financial_info(symbol):
             'metric_type': 'Balance Sheet',
             'metric_name': 'Shares Outstanding',
             'metric_period': 'Annual',
-            'metric_value': shares_outstanding,
+            'metric_value': company_profile['shareOutstanding'],
             'retrieved_at': datetime.now(),
             'raw_json': None
         }
@@ -61,7 +61,7 @@ def get_company_financial_info(symbol):
         record = {
             'symbol': symbol,
             'source': 'finnhub',
-            'metric_type': 'Valuation',  # you can override this per-key if needed
+            'metric_type': 'Valuation',  
             'metric_name': metric_name,
             'metric_period': metric_period(metric_name),
             'metric_value': metric_value,
@@ -103,5 +103,6 @@ def upload_company_financials(query):
 
 
 if __name__ == '__main__':
+    # get_company_financial_info('GOOGL')
     query = "SELECT * FROM raw.news"
     upload_company_financials(query)
