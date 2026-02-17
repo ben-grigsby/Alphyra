@@ -4,14 +4,14 @@
 
 with company_metrics as (
     SELECT 
-        upper(trim(symbol)) as symbol,
+        symbol,
         source,
         metric_type,
         metric_name,
         metric_period,
         metric_value,
         retrieved_at,
-        cast(retrieved_at as date) as retrieved_date,
+        retrieved_date,
         raw_json,
         created_at
     

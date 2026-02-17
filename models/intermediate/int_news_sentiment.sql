@@ -8,5 +8,5 @@ select
     AVG(neutral_score) as neutral_score,
     AVG(negative_score) as negative_score
 from {{ref('stg_sentiment')}}
-where source_type == 'Video'
+where source_type != 'Video'
 group by content_id
