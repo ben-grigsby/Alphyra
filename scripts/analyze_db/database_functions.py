@@ -10,12 +10,12 @@ load_dotenv()
 
 def get_db_info(query):
     """
-    Retrieve all news articles from the raw.news table in the PostgreSQL database.
+    Retrieve data from a table in the PostgreSQL database.
 
     Returns
     -------
     pd.DataFrame
-        A DataFrame containing all rows from the raw.news table, 
+        A DataFrame containing all rows from a table, 
         ordered by symbol and published date.
     """
     postgres_url = os.getenv("POSTGRES_URL")

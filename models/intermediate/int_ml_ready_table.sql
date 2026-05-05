@@ -36,5 +36,7 @@ stock_momentum as (
         ma_close_momentum
     
     FROM {{ref('int_daily_stock_values')}}
-),
+)
 
+
+select * from stock_momentum

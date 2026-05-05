@@ -4,6 +4,7 @@
 
 select
     id,
+    content_id,
     trim(sentence) as sentence,
     positive_score,
     neutral_score,

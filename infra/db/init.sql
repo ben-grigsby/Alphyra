@@ -6,6 +6,7 @@ CREATE SCHEMA IF NOT EXISTS mart;
 -- Create raw news tables
 CREATE TABLE IF NOT EXISTS raw.news(
     id SERIAL PRIMARY KEY,
+    content_id CHAR(32) NOT NULL UNIQUE,
     company_name VARCHAR(500),
     sector VARCHAR(100),
     symbol VARCHAR(10),
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS raw.news(
 -- Create raw videos tables
 CREATE TABLE IF NOT EXISTS raw.videos (
     id SERIAL PRIMARY KEY,
+    content_id CHAR(32) NOT NULL UNIQUE,
     symbol VARCHAR(10) NOT NULL,
     video_id VARCHAR(100) NOT NULL,
     title TEXT,
@@ -36,6 +38,7 @@ CREATE TABLE IF NOT EXISTS raw.videos (
 -- Create raw sentiment table (sentence-level)
 CREATE TABLE IF NOT EXISTS raw.sentiment (
     id SERIAL PRIMARY KEY,
+    content_id CHAR(32) NOT NULL,
     sentence TEXT,
     positive_score FLOAT,
     neutral_score FLOAT,
@@ -67,8 +70,14 @@ CREATE TABLE IF NOT EXISTS raw.company_financials (
     metric_type TEXT,
     metric_name TEXT,
     metric_period TEXT,
-    metric_value FLOAT,
+    metric_value DOUBLE PRECISION,
+    snapshot_date DATE NULL,
+    financial_period_end DATE NULL,
     retrieved_at TIMESTAMP,
     raw_json TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Sentiment index
+CREATE INDEX IF NOT EXISTS idx_sentiment_content_id
+ON raw.sentiment(content_id);

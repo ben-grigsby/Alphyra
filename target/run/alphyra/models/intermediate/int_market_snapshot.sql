@@ -1,5 +1,5 @@
 
-  create view "alphyra"."staging_intermediate"."int_company_fundamentals__dbt_tmp"
+  create view "alphyra"."staging_intermediate"."int_market_snapshot__dbt_tmp"
     
     
   as (
@@ -12,5 +12,5 @@ select
     retrieved_at
 
 from "alphyra"."staging_staging"."stg_company_financials"
-where metric_category = 'fundamentals'
+where metric_category = 'market'
   );

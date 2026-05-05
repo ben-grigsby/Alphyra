@@ -20,7 +20,7 @@ from scripts.news.analyze_news_sentiment import (
     get_sentiment_dataframe
 )
 
-from scripts.company_info.company_info_ingestion_pipeline import (
+from scripts.company_info.company_API_func import (
     get_company_info
 )
 

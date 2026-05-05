@@ -7,10 +7,13 @@ services:
       - .:/app
       - ./data:/app/data
       - ./downloads:/app/downloads
+      - ./infra/dbt:/root/.dbt
     working_dir: /app
     depends_on:
       - postgres
     command: tail -f /dev/null
+    ports:
+      - "8501:8501"
 
   postgres:
     image: postgres:15

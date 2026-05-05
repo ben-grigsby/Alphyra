@@ -17,26 +17,23 @@ clean-targets:
 
 models:
   alphyra:
+
     staging:
       +schema: staging
-      staging: ["models/staging"]
       +materialized: view
       +tags: ['staging']
 
     intermediate:
       +schema: intermediate
-      staging: ["models/intermediate"]
       +materialized: view
       +tags: ['intermediate']
 
     marts:
       +schema: mart
-      staging: ["models/marts"]
       +materialized: table
       +tags: ['mart']
 
     iceberg:
-      +schema: iceberg_tables
-      staging: ["models/iceberg"]
+      +schema: iceberg
       +materialized: table
       +tags: ['iceberg']

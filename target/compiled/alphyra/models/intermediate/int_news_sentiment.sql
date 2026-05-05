@@ -1,12 +1,10 @@
-{{ config(
-    materialized='view'
-) }}
+
 
 select
     content_id,
     AVG(positive_score) as positive_score,
     AVG(neutral_score) as neutral_score,
     AVG(negative_score) as negative_score
-from {{ref('stg_sentiment')}}
-where source_type = 'VIDEO'
+from "alphyra"."staging_staging"."stg_sentiment"
+where source_type != 'Video'
 group by content_id

@@ -1,0 +1,230 @@
+===============================================
+-------------- VALUATION METRICS --------------
+===============================================
+
+peTTM -- Price-to-Earnings (Trailing 12 Months)
+    Formula: Price / Earnings per Share
+    Importance:
+        - How much investors pay for $1 of profit
+        - High P/E -> growth expectations
+        - Low P/E -> possibly undervalued or declining
+    
+    Note:
+        - Useless if earnings are negative
+
+pb -- Price-to-Book
+    Formula: Price / Book value per share
+    Importance:
+        - Used heavily for banks, asset-heavy firms
+        - <1 can mean undervalued...or distressed
+    
+    Note:
+        - Less useful for tech as intangibles are not captured as well
+
+psTTM -- Price-to-Sales (Trailing 12 Months)
+    Formula: Price / Revenue
+    Importance: 
+        - Useful when earnings are volatile or negative
+        - Common for growth tech
+    
+    Note:
+        - Revenue is harder to manipulate than earnings
+
+pegTTM -- P/E divided by Growth
+    Formula: P/E/Growth
+    Importance:
+        - Adjusts valuation by growth
+        - PEG ~ 1 often considered 'fair'
+
+    Note:
+        - High growth companies can justify high P/E
+
+marketCapitalization
+    Formula: N/A
+    Importance:
+        - Company size classification (large cap, mid cap, small cap)
+        - Impacts risk profile
+
+enterpriseValue
+    Formula: Market cap + debt - cash
+    Importance:
+        - True takeover value
+        - Used in EV/EBITDA
+        - Better than market cap for capital-structure comparison
+
+
+===========================================
+-------------- Profitability --------------
+===========================================
+(Does the company actually make money well)
+
+grossMarginTTM
+    Formula: Revenue - COGS
+    Importance:
+        - Pricing power
+        - Competitive moat
+    
+    Note:
+        - High margin -> strong business model
+
+netProfitMarginTTM
+    Formula: Net income / Revenue
+    Importance:
+        - True bottom-line efficiency
+        - How much profit per dollar of sales
+
+operatingMarginTTM
+    Formula: Operating income / Revenue
+    Importance:
+        - Core business profitability
+        - Strips out financing noise
+
+roaTTM -- Return on Assets (Trailing 12 Months)
+    Formula: Profit / Total Assets
+    Importance:
+        - Efficiency of asset usage
+
+roeTTM -- Return on Equity (Trailing 12 Months)
+    Formula: Profit / Shareholder equity
+    Importance:
+        - Measures stakeholder return efficiency 
+    
+    Note:
+        - High ROE is powerful if not driven by excessive debt
+
+roiTTM -- Return on Investment (Trailing 12 Months)
+    Importance:
+        - Capital allocation quality
+    
+    Note:
+        - Broad efficiency metric
+        - Often similar to ROIC
+
+
+====================================
+-------------- Growth --------------
+====================================
+(Is the company expanding?)
+
+revenueGrowthTTMYoy
+    Importance:
+        - Core business expansion
+
+epsGrowthTTMYoy
+    Importance:
+        - Shareholder value growth
+
+revenueGrowth5Y
+    Importance:
+        - Sustainability of growth
+
+epsGrowth5Y
+    Importance:
+        - Long-term compounding ability
+
+
+==============================================
+-------------- Financial Health --------------
+==============================================
+(Will it survive downturns?)
+
+currentRatioQuarterly
+    Formula: Current assets / current liabilities
+    Importance:
+        - Short-term liquidity
+
+quickRatioQuarterly
+    Formula: (Current assets - inventory) / current liabilities
+    Importance:
+        - Stricter liquidity test
+
+totalDebt/totalEquityQuarterly
+    Importance:
+        - Financial risk
+    
+    Note:
+        - High debt magnifies returns AND risk
+
+cashPerSharePerShareQuarterly
+    Formula: Cash / shares outstanding
+    Importance:
+        - Downside protection
+        - Acquisition firepower
+
+
+======================================
+-------------- Momentum --------------
+======================================
+(How is price behaving?)
+
+52WeekPriceReturnDaily
+    Importance:
+        - Trend strength
+
+50DayPriceReturnDaily
+    Importance:
+        - Reaction to events
+
+13WeekPriceReturnDaily
+    Importance:
+        - Medium-term trend
+
+priceRelativeToS&P50013Week
+    Importance:
+        - Is stock outperforming index?
+    
+    Note:
+        - Institutional investors care about relative return
+
+
+
+
+
+
+===========================================================
+-------------- Daily / Market-Driven Metrics --------------
+===========================================================
+(Even if fundamentals don't change, price changes -> ratios change)
+(GROUP BY symbol, market_date)
+
+Value (Price-sensitive)
+    - peTTM
+    - pb
+    - psTTM
+    - pegTTM
+    - marketCapitalization
+    - enterpriseValue
+
+Momentum (Purely price-based)
+    - 52WeekPriceReturnDaily
+    - 50DayPriceReturnDaily
+    - 13WeekPriceReturnDaily
+    - priceRelativeToS&P50013Week
+
+
+==================================================================
+-------------- Quarterly / Slow Fundamental Metrics --------------
+==================================================================
+(Move when earnings are released)
+(GROUP BY symbol, fiscal_period_end_date)
+
+Profitability
+    - grossMarginTTM
+    - netProfitMarginTTM
+    - operatingMarginTTM
+    - roaTTM
+    - roeTTM
+    - roiTTM
+
+Financial Health
+    - currentRatioQuarterly
+    - quickRatioQuarterly
+    - totalDebt/totalEquityQuarterly
+    - cashPerSharePerShareQuarterly
+
+Growth
+    - revenueGrowthTTMYoy
+    - epsGrowthTTMYoy
+    - revenueGrowth5Y
+    - epsGrowth5Y
+

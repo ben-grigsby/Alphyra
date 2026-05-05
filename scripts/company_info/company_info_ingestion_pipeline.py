@@ -9,10 +9,10 @@ from datetime import datetime
 load_dotenv()
 FINNHUB_API = os.getenv("FINNHUB_API_KEY")
 
-from scripts.company_info.sec_filings_analysis import (
+from scripts.company_info.company_API_func import (
     get_company_profile,
-    extract_company_valuations,
-    metric_period
+    metric_period,
+    extract_metric_and_series,
 )
 
 from scripts.analyze_db.database_functions import (
@@ -21,70 +21,126 @@ from scripts.analyze_db.database_functions import (
 )
 
 
-def get_company_info(symbol):
-    """
-    Retrieve company name and sector for a given stock symbol using Finnhub's profile2 endpoint.
-    """
-    url = f"https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token={FINNHUB_API}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        name = data.get("name", None)
-        sector = data.get("finnhubIndustry", None)
-        return name, sector
-    return None, None
 
+def analyze_company_metrics_snapshot(symbol, metric_dict, snapshot_date, retrieved_at):
+    records = []
 
-
-
-def get_company_financial_info(symbol):
-    company_profile_url = f"https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token={FINNHUB_API}"
-    comp_fin_url = f"https://finnhub.io/api/v1/stock/metric?symbol={symbol}&metric=all&token={FINNHUB_API}"
-
-    company_profile = get_company_profile(company_profile_url)
-    metric_dict = extract_company_valuations(comp_fin_url)
-
-    records = [
-        {
-            'symbol': symbol,
-            'source': 'SEC 10-K',
-            'metric_type': 'Balance Sheet',
-            'metric_name': 'Shares Outstanding',
-            'metric_period': 'Annual',
-            'metric_value': company_profile['shareOutstanding'],
-            'retrieved_at': datetime.now(),
-            'raw_json': None
-        }
-    ] 
 
     for metric_name, metric_value in metric_dict.items():
-        record = {
+        # Skip non-numeric values
+        if not isinstance(metric_value, (int, float)):
+            continue
+        
+        record =  {
             'symbol': symbol,
             'source': 'finnhub',
-            'metric_type': 'Valuation',  
+            'metric_type': 'snapshot',  
             'metric_name': metric_name,
             'metric_period': metric_period(metric_name),
             'metric_value': metric_value,
-            'retrieved_at': datetime.now(),
+            'snapshot_date': snapshot_date,
+            'retrieved_at': retrieved_at,
+            'financial_period_end': None,
             'raw_json': None
         }
-        records.append(record)
 
+        records.append(record)
+    
     return pd.DataFrame(records)
 
 
 
-def get_company_financials(symbol, output_path="data/company_financials.txt"):
-    url = f"https://finnhub.io/api/v1/stock/metric?symbol={symbol}&metric=all&token={FINNHUB_API}"
-    response = requests.get(url)
+def analyze_company_series(symbol, series_dict, retrieved_at):
+    records = []
+
+    annual_dict = series_dict.get('annual', {})
+    quarterly_dict = series_dict.get('quarterly', {})
+
+    for annual_key in annual_dict:
+        for annual_value in annual_dict[annual_key]:
+
+            period = annual_value['period']
+            value = annual_value['v']
+
+            record =  {
+                'symbol': symbol,
+                'source': 'finnhub',
+                'metric_type': 'series',  
+                'metric_name': annual_key,
+                'metric_period': 'annual',
+                'metric_value': value,
+                'retrieved_at': retrieved_at,
+                'snapshot_date': None,
+                'financial_period_end': period,
+                'raw_json': None
+            }
+
+            records.append(record)
     
-    if response.status_code == 200:
-        data = response.json()
-        with open(output_path, "w") as f:
-            json.dump(data, f, indent=4)
-        print(f"Saved financials for {symbol} to {output_path}")
-    else:
-        print(f"Failed to retrieve data for {symbol}: {response.status_code}")
+    for quarterly_key in quarterly_dict:
+        for quarterly_value in quarterly_dict[quarterly_key]:
+
+            period = quarterly_value['period']
+            value = quarterly_value['v']
+
+            record =  {
+                'symbol': symbol,
+                'source': 'finnhub',
+                'metric_type': 'series',  
+                'metric_name': quarterly_key,
+                'metric_period': 'quarterly',
+                'metric_value': value,
+                'retrieved_at': retrieved_at,
+                'snapshot_date': None,
+                'financial_period_end': period,
+                'raw_json': None
+            }
+
+            records.append(record)
+    
+    return pd.DataFrame(records)
+
+
+
+def analyze_company_profile(symbol, profile_dict, snapshot_date, retrieved_at):
+    records = []
+
+    for key in ['marketCapitalization', 'shareOutstanding']:
+        value = profile_dict.get(key)
+        if value is not None:
+            record = {
+                'symbol': symbol,
+                'source': 'finnhub',
+                'metric_type': 'snapshot',
+                'metric_name': key,
+                'metric_period': None,
+                'metric_value': value,
+                'retrieved_at': retrieved_at,
+                'snapshot_date': snapshot_date,
+                'financial_period_end': None,
+                'raw_json': None
+            }
+    
+            records.append(record)
+    
+    return pd.DataFrame(records)
+
+
+
+def finance_dictionary_combinator(symbol):
+    company_profile_dict = get_company_profile(symbol)
+    market_snapshot_metrics, market_snapshot_series = extract_metric_and_series(symbol)
+
+    snapshot_date = datetime.utcnow().date()
+    retrieved_at = datetime.utcnow()
+
+    symbol_series_df = analyze_company_series(symbol, market_snapshot_series, retrieved_at)
+    symbol_metric_snapshot_df = analyze_company_metrics_snapshot(symbol, market_snapshot_metrics, snapshot_date, retrieved_at)
+    symbol_company_profile = analyze_company_profile(symbol, company_profile_dict, snapshot_date, retrieved_at)
+
+    combined_df = pd.concat([symbol_series_df, symbol_metric_snapshot_df, symbol_company_profile], ignore_index=True)
+
+    return combined_df
 
 
 
@@ -94,8 +150,8 @@ def upload_company_financials(query):
     symbols = df['symbol'].unique().tolist()
 
     for symbol in symbols:
-        symbol_df = get_company_financial_info(symbol)
-        status, error = insert_financials_into_db(symbol_df)
+        symbol_company_df = finance_dictionary_combinator(symbol)
+        status, error = insert_financials_into_db(symbol_company_df)
         if status:
             print(f'[INFO] Successfully entered {symbol} financial information into table.')
         else:
@@ -103,6 +159,5 @@ def upload_company_financials(query):
 
 
 if __name__ == '__main__':
-    # get_company_financial_info('GOOGL')
-    query = "SELECT * FROM raw.news"
+    query = "SELECT * FROM raw.news WHERE symbol = 'NVDA'"
     upload_company_financials(query)

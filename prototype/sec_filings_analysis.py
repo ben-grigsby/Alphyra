@@ -2,6 +2,11 @@ import requests
 import re
 import json
 
+from dotenv import load_dotenv
+
+load_dotenv()
+FINNHUB_API = os.getenv("FINNHUB_API_KEY")
+
 
 # from bs4 import BeautifulSoup
 
@@ -28,28 +33,25 @@ def get_company_profile(report_url):
         
     except Exception as e:
         print(f"[ERROR] Unable to acquire company profile information: {e}")
-
-def extract_company_valuations(filing_url):
-    try:
-        value_metrics = company_info_metrics
-        response = requests.get(filing_url)
-        data = response.json()
-        metrics = data['metric']
-
-        metric_dict = {}
-
-        for key, value in metrics.items():
-            if key in value_metrics:
-                print(f"[INFO] Adding {key} to records.")
-                metric_dict[key] = value
         
-        return metric_dict
-    
+
+def extract_metric_and_series(symbol):
+    market_snapshot_url = f"https://finnhub.io/api/v1/stock/metric?symbol={symbol}&metric=all&token={FINNHUB_API}"
+
+    try:
+        response = requests.get(market_snapshot_url)
+        response.raise_for_status()
+
+        data = response.json()
+
+        metrics = data.get('metric', {})
+        series = data.get('series', {})
+
+        return metrics, series
+
     except Exception as e:
-        print(f'[ERROR] Unable to locate all desired metrics: {e}')
-
-    return {}
-
+        print(f'[ERROR] Failed extracting metric and series: {e}')
+        return {}, {}
 
 
 def metric_period(metric_name):

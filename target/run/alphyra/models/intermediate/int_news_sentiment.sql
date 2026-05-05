@@ -1,5 +1,5 @@
 
-  create view "alphyra"."staging_intermediate"."int_video_sentiment__dbt_tmp"
+  create view "alphyra"."staging_intermediate"."int_news_sentiment__dbt_tmp"
     
     
   as (
@@ -11,6 +11,6 @@ select
     AVG(neutral_score) as neutral_score,
     AVG(negative_score) as negative_score
 from "alphyra"."staging_staging"."stg_sentiment"
-where source_type = 'VIDEO'
+where source_type != 'Video'
 group by content_id
   );

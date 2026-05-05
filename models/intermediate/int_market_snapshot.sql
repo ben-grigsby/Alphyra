@@ -9,4 +9,4 @@ select
     retrieved_at
 
 from {{ref('stg_company_financials')}}
-where metric_category = 'fundamentals'
+where metric_category = 'market'

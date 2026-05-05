@@ -7,4 +7,4 @@ select
     retrieved_at
 
 from "alphyra"."staging_staging"."stg_company_financials"
-where metric_category = 'fundamentals'
+where metric_category = 'market'
